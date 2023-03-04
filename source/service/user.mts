@@ -23,15 +23,3 @@ export async function getUserIfNotExistThenCreate(id: string): Promise<User> {
         return await create(id);
     }
 }
-
-export async function update(id: string, values: any) {
-    return await usersRepository.update(
-        {...values},
-        {where: {id}}
-    );
-}
-
-export async function setCoins(id: string, coins: number) {
-    return await update(id, {balance: coins});
-}
-
