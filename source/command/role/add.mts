@@ -1,4 +1,4 @@
-import {ChatInputCommandInteraction} from "discord.js";
+import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js";
 import {validateRole} from "./validate.mjs";
 
 import {User} from "../../database/model/user.mjs";
@@ -19,3 +19,19 @@ export async function addRole(interaction: ChatInputCommandInteraction, user: Us
     await user.save()
     await interaction.reply("Role added.")
 }
+
+export const addRoleSubCommand = new SlashCommandSubcommandBuilder()
+    .setName("add")
+    .setDescription("Add a role to the user.")
+    .addUserOption(option =>
+        option
+            .setName("user")
+            .setDescription("User id.")
+            .setRequired(true)
+    )
+    .addStringOption(option =>
+        option
+            .setName("role")
+            .setDescription("Role title.")
+            .setRequired(true)
+    )

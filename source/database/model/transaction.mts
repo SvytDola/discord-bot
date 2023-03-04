@@ -7,7 +7,6 @@ export class Transaction extends Model {
     declare coins: number
 }
 
-
 export function getTransactionsRepository(sequelize: Sequelize) {
     return Transaction.init({
         id: {

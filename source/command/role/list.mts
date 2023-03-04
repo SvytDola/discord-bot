@@ -1,14 +1,12 @@
-import {ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js";
 
 import {Role} from "../../enum/role.mjs";
 import {EMBED_COLOR} from "../../config/index.mjs";
 
 
 const StringIsNumber = (value: any) => {
-    return isNaN(Number(value));
+    return isNaN(Number(value))
 };
-
-const iconUrl = "https://cdn.discordapp.com/attachments/606107088485089295/1081514456972013649/photo_2022-11-24_16-58-24.jpg"
 
 export async function listOfRoles(interaction: ChatInputCommandInteraction) {
     const fields: any = []
@@ -26,12 +24,11 @@ export async function listOfRoles(interaction: ChatInputCommandInteraction) {
         .setTitle("Permission roles")
         .setDescription("Roles responsible for moderating the bot.")
         .setFields(fields)
-        .setAuthor({
-            iconURL: iconUrl,
-            name: "Svyt Dola#2666"
-        })
-        .setFields(fields)
         .setTimestamp()
 
     await interaction.reply({embeds: [embed]})
 }
+
+export const listSubCommand = new SlashCommandSubcommandBuilder()
+    .setName("list")
+    .setDescription("Return all roles.")
