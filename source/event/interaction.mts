@@ -17,7 +17,7 @@ export async function onInteractionCreate(interaction: Interaction) {
     } catch (error) {
         console.error(error)
         if (error instanceof BaseError) {
-             await interaction.reply({content: error.message, ephemeral: true})
+             await interaction.reply({content: error.message})
              return
         }
 

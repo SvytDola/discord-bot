@@ -21,7 +21,7 @@ export const Roles = (...roles: Role[]) => {
             if (!roles.some((role) => user.roles.includes(role))) {
                 throw new AccessDenied()
             }
-            return await event(interaction)
+            return await event(interaction, user)
         }
     }
 }
