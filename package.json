@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-esm source/bot.ts",
     "build": "tsc",
-    "start": "npm run build && node dist/source/bot.js"
+    "start": "npm run build && node dist/bot.js"
   },
   "repository": {
     "type": "git",
