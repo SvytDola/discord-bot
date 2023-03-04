@@ -5,7 +5,7 @@ import {BaseCommand} from "./base.mjs"
 import {Role} from "../enum/role.mjs";
 import {Roles} from "../guard/role.mjs";
 import {User} from "../database/model/user.mjs";
-import {RoleNotFound} from "../error/role.mjs";
+import {RoleAlreadyExists, RoleNotFound} from "../error/role.mjs";
 import {UserService} from "../service/user.mjs";
 
 export class RoleCommand extends BaseCommand {
@@ -41,18 +41,21 @@ export class RoleCommand extends BaseCommand {
 
         const userId = interaction.options.getUser("user")?.id!
 
-        if (!roleId) {
+        if (roleId === undefined)
             throw new RoleNotFound(role)
-        }
+
+        const roleIdNumber = +roleId;
 
         if (userId !== user.id) {
             user = await UserService.getUserIfNotExistThenCreate(userId);
         }
+        if (user.roles.includes(roleIdNumber))
+            throw new RoleAlreadyExists(role)
 
-        user.roles = [...user.roles, +roleId]
+        user.roles = [...user.roles, roleIdNumber]
 
         await user.save()
-
+        await interaction.reply("Role added.")
     }
 
     @Roles(Role.ADMIN, Role.MODERATOR)
