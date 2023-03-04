@@ -20,5 +20,4 @@ export class PingCommand extends BaseCommand {
     public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
         await interaction.reply("Pong!")
     }
-
 }
