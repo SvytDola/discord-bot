@@ -11,3 +11,10 @@ export class RoleAlreadyExists extends BaseError {
         super(`Such a role '${name}' already exists`)
     }
 }
+
+
+export class UserDoesNotHaveThisRole extends BaseError {
+    constructor(name: string) {
+        super(`You don't have that role '${name}'.`)
+    }
+}
