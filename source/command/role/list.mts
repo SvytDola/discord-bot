@@ -1,9 +1,9 @@
-import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js";
+import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js"
 
-import {Role} from "../../enum/role.mjs";
-import {EMBED_COLOR} from "../../config/index.mjs";
-import {BaseCommand} from "../base.mjs";
-import {User} from "../../database/model/user.mjs";
+import {Role} from "../../enum/role.mjs"
+import {EMBED_COLOR} from "../../config/index.mjs"
+import {BaseCommand} from "../base.mjs"
+import {User} from "../../database/model/user.mjs"
 
 
 const StringIsNumber = (value: any) => {
@@ -11,7 +11,7 @@ const StringIsNumber = (value: any) => {
 };
 
 export class RoleListSubCommand extends BaseCommand {
-    public data: SlashCommandSubcommandBuilder;
+    public data: SlashCommandSubcommandBuilder
 
     constructor() {
         super()

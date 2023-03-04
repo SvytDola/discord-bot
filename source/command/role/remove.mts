@@ -1,14 +1,14 @@
-import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js";
-import {validateRole} from "./validate.mjs";
+import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js"
+import {validateRole} from "./validate.mjs"
 
-import {BaseCommand} from "../base.mjs";
-import {User} from "../../database/model/user.mjs";
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
-import {UserDoesNotHaveThisRole} from "../../error/role.mjs";
+import {BaseCommand} from "../base.mjs"
+import {User} from "../../database/model/user.mjs"
+import {getUserIfNotExistThenCreate} from "../../service/user.mjs"
+import {UserDoesNotHaveThisRole} from "../../error/role.mjs"
 
 
 export class RoleRemoveSubCommand extends BaseCommand {
-    public data: SlashCommandSubcommandBuilder;
+    public data: SlashCommandSubcommandBuilder
 
     constructor() {
         super()
@@ -32,7 +32,7 @@ export class RoleRemoveSubCommand extends BaseCommand {
     }
 
     async execute(interaction: ChatInputCommandInteraction, user: User) {
-        return Promise.resolve(undefined);
+        return Promise.resolve(undefined)
     }
 
 }

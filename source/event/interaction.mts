@@ -1,6 +1,6 @@
-import {Interaction} from "discord.js";
+import {Interaction} from "discord.js"
 import {commands} from "../command/index.mjs"
-import {BaseError} from "../error/base.mjs";
+import {BaseError} from "../error/base.mjs"
 
 export async function onInteractionCreate(interaction: Interaction) {
     if (!interaction.isChatInputCommand()) return

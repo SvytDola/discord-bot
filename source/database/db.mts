@@ -1,14 +1,14 @@
-import {Sequelize} from "sequelize";
+import {Sequelize} from "sequelize"
 
-import {getUsersRepository} from "./model/user.mjs";
+import {getUsersRepository} from "./model/user.mjs"
 import {
     DATABASE_NAME,
     DATABASE_USERNAME,
     DATABASE_DIALECT,
     DATABASE_PASSWORD,
     DATABASE_PORT
-} from "../config/index.mjs";
-import {getTransactionsRepository} from "./model/transaction.mjs";
+} from "../config/index.mjs"
+import {getTransactionsRepository} from "./model/transaction.mjs"
 
 export const sequelize = new Sequelize({
     database: DATABASE_NAME,

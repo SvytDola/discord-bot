@@ -4,6 +4,10 @@ import {Role} from "../enum/role.mjs"
 import {getUserIfNotExistThenCreate} from "../service/user.mjs";
 import {AccessDenied} from "../error/permission.mjs";
 
+/**
+ * Не позволяет использовать атрибут или метод класса
+ * при обёртке функции
+ */
 export const Roles = (...roles: Role[]) => {
     return function (
         target: any,
@@ -12,11 +16,6 @@ export const Roles = (...roles: Role[]) => {
     ) {
         const event = descriptor.value
         descriptor.value = async (interaction: ChatInputCommandInteraction) => {
-            /*
-                TODO:
-                  Возможно будет необходимо изменить реализцаию,
-                  для того чтобы уменьшить затраты ресурсов.
-            */
             const user = await getUserIfNotExistThenCreate(interaction.user.id)
             if (!roles.some((role) => user.roles.includes(role))) {
                 throw new AccessDenied()

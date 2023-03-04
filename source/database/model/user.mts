@@ -1,12 +1,12 @@
 import {Sequelize, DataTypes, Model} from "sequelize"
-import {Role} from "../../enum/role.mjs";
+import {Role} from "../../enum/role.mjs"
 
 export class User extends Model {
-    declare id: string;
-    declare xp: number;
-    declare balance: number;
-    declare marry: string[];
-    declare roles: Role[];
+    declare id: string
+    declare xp: number
+    declare balance: number
+    declare marry: string[]
+    declare roles: Role[]
 }
 
 export function getUsersRepository(sequelize: Sequelize): typeof User {

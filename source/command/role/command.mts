@@ -17,7 +17,6 @@ import {User} from "../../database/model/user.mjs";
 
 const commands = new Collection<string, BaseCommand>()
 
-
 export class RoleCommand extends BaseCommand {
     public data: SlashCommandSubcommandsOnlyBuilder
 
@@ -27,7 +26,6 @@ export class RoleCommand extends BaseCommand {
         const roleAddSubCommand = new RoleAddSubCommand()
         const roleListSubCommand = new RoleListSubCommand()
         const roleRemoveSubCommand = new RoleRemoveSubCommand()
-
 
         commands.set("add", roleAddSubCommand)
         commands.set("list", roleListSubCommand)

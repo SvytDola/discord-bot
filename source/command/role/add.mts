@@ -1,14 +1,14 @@
-import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js";
-import {validateRole} from "./validate.mjs";
+import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js"
+import {validateRole} from "./validate.mjs"
 
-import {User} from "../../database/model/user.mjs";
+import {User} from "../../database/model/user.mjs"
 import {BaseCommand} from "../base.mjs";
-import {RoleAlreadyExists} from "../../error/role.mjs";
+import {RoleAlreadyExists} from "../../error/role.mjs"
 
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
+import {getUserIfNotExistThenCreate} from "../../service/user.mjs"
 
 export class RoleAddSubCommand extends BaseCommand {
-    public data: SlashCommandSubcommandBuilder;
+    public data: SlashCommandSubcommandBuilder
 
     constructor() {
         super();
