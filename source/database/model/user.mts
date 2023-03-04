@@ -9,7 +9,7 @@ export class User extends Model {
     declare roles: Role[];
 }
 
-export function getUser(sequelize: Sequelize): typeof User {
+export function getUsersRepository(sequelize: Sequelize): typeof User {
     return User.init({
         id: {
             type: DataTypes.STRING,

@@ -1,6 +1,6 @@
 import {Sequelize} from "sequelize";
 
-import {getUser} from "./model/user.mjs";
+import {getUsersRepository} from "./model/user.mjs";
 import {
     DATABASE_NAME,
     DATABASE_USERNAME,
@@ -8,6 +8,7 @@ import {
     DATABASE_PASSWORD,
     DATABASE_PORT
 } from "../config/index.mjs";
+import {getTransactionsRepository} from "./model/transaction.mjs";
 
 export const sequelize = new Sequelize({
     database: DATABASE_NAME,
@@ -16,5 +17,5 @@ export const sequelize = new Sequelize({
     dialect: DATABASE_DIALECT,
     port: DATABASE_PORT
 })
-
-export const usersRepository = getUser(sequelize)
+export const usersRepository = getUsersRepository(sequelize)
+export const transactionsRepository = getTransactionsRepository(sequelize)
