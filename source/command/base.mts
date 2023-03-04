@@ -1,7 +1,13 @@
-import {Interaction, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder} from "discord.js";
+import {
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
+    SlashCommandSubcommandsOnlyBuilder,
+
+    ChatInputCommandInteraction,
+} from "discord.js";
 
 export abstract class BaseCommand {
-    public abstract data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder;
+    public abstract data: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | SlashCommandSubcommandBuilder;
 
-    public abstract execute(interaction: Interaction, ...args: any): Promise<void>;
+    public abstract execute(interaction: ChatInputCommandInteraction, ...args: any): Promise<void>;
 }

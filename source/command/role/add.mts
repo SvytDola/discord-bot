@@ -2,36 +2,48 @@ import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discor
 import {validateRole} from "./validate.mjs";
 
 import {User} from "../../database/model/user.mjs";
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
+import {BaseCommand} from "../base.mjs";
 import {RoleAlreadyExists} from "../../error/role.mjs";
 
-export async function addRole(interaction: ChatInputCommandInteraction, user: User) {
-    const [roleIdNumber, role] = await validateRole(interaction)
+import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 
-    const userId = interaction.options.getUser("user")?.id!
-    user = await getUserIfNotExistThenCreate(userId);
+export class RoleAddSubCommand extends BaseCommand {
+    public data: SlashCommandSubcommandBuilder;
 
-    if (user.roles.includes(roleIdNumber))
-        throw new RoleAlreadyExists(role)
+    constructor() {
+        super();
 
-    user.roles = [...user.roles, roleIdNumber]
+        this.data = new SlashCommandSubcommandBuilder()
+            .setName("add")
+            .setDescription("Add a role to the user.")
+            .addUserOption(option =>
+                option
+                    .setName("user")
+                    .setDescription("User id.")
+                    .setRequired(true)
+            )
+            .addStringOption(option =>
+                option
+                    .setName("role")
+                    .setDescription("Role title.")
+                    .setRequired(true)
+            )
+    }
 
-    await user.save()
-    await interaction.reply("Role added.")
+    public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
+        const [roleIdNumber, role] = await validateRole(interaction)
+
+        const userId = interaction.options.getUser("user")?.id!
+        user = await getUserIfNotExistThenCreate(userId);
+
+        if (user.roles.includes(roleIdNumber))
+            throw new RoleAlreadyExists(role)
+
+
+        user.roles = [...user.roles, roleIdNumber]
+
+        await user.save()
+        await interaction.reply("Role added.")
+    }
+
 }
-
-export const addRoleSubCommand = new SlashCommandSubcommandBuilder()
-    .setName("add")
-    .setDescription("Add a role to the user.")
-    .addUserOption(option =>
-        option
-            .setName("user")
-            .setDescription("User id.")
-            .setRequired(true)
-    )
-    .addStringOption(option =>
-        option
-            .setName("role")
-            .setDescription("Role title.")
-            .setRequired(true)
-    )

@@ -1,10 +1,41 @@
 import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js";
 import {validateRole} from "./validate.mjs";
 
+import {BaseCommand} from "../base.mjs";
 import {User} from "../../database/model/user.mjs";
 import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 import {UserDoesNotHaveThisRole} from "../../error/role.mjs";
 
+
+export class RoleRemoveSubCommand extends BaseCommand {
+    public data: SlashCommandSubcommandBuilder;
+
+    constructor() {
+        super()
+
+        this.data = new SlashCommandSubcommandBuilder()
+            .setName("remove")
+            .setDescription("Remove a role from a user.")
+            .addUserOption(option =>
+                option
+                    .setName("user")
+                    .setDescription("User id.")
+                    .setRequired(true)
+            )
+            .addStringOption(option =>
+                option
+                    .setName("role")
+                    .setDescription("Role title.")
+                    .setRequired(true)
+            )
+
+    }
+
+    async execute(interaction: ChatInputCommandInteraction, user: User) {
+        return Promise.resolve(undefined);
+    }
+
+}
 export async function removeRole(interaction: ChatInputCommandInteraction, user: User) {
     const [roleIdNumber, role] = await validateRole(interaction)
 
@@ -19,19 +50,3 @@ export async function removeRole(interaction: ChatInputCommandInteraction, user:
     await user.save()
     await interaction.reply("Role removed.")
 }
-
-export const removeRoleSubCommand = new SlashCommandSubcommandBuilder()
-    .setName("remove")
-    .setDescription("Remove a role from a user.")
-    .addUserOption(option =>
-        option
-            .setName("user")
-            .setDescription("User id.")
-            .setRequired(true)
-    )
-    .addStringOption(option =>
-        option
-            .setName("role")
-            .setDescription("Role title.")
-            .setRequired(true)
-    )
