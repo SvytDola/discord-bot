@@ -5,10 +5,10 @@ import {
 } from "discord.js"
 
 import {sequelize} from "./database/db.mjs"
+import {commands} from "./command/index.mjs"
+import {registerCommands} from "./register/commands.mjs"
 import {onInteractionCreate, onReady} from "./event/index.mjs"
 import {CLIENT_ID, DISCORD_TOKEN, GUILD_ID} from "./config/index.mjs"
-import {registerCommands} from "./register/commands.mjs"
-import {commands} from "./command/index.mjs"
 
 async function main() {
     await sequelize.sync()
@@ -25,7 +25,6 @@ async function main() {
     }
 
     await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, false)
-
     await client.login(DISCORD_TOKEN)
 }
 
