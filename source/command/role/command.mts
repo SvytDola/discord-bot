@@ -15,21 +15,22 @@ import {Role} from "../../enum/role.mjs";
 import {Roles} from "../../guard/role.mjs";
 import {User} from "../../database/model/user.mjs";
 
-const commands = new Collection<string, BaseCommand>()
 
 export class RoleCommand extends BaseCommand {
     public data: SlashCommandSubcommandsOnlyBuilder
+    public commands: Collection<string, BaseCommand>
 
     constructor() {
         super();
+        this.commands = new Collection<string, BaseCommand>();
 
         const roleAddSubCommand = new RoleAddSubCommand()
         const roleListSubCommand = new RoleListSubCommand()
         const roleRemoveSubCommand = new RoleRemoveSubCommand()
 
-        commands.set("add", roleAddSubCommand)
-        commands.set("list", roleListSubCommand)
-        commands.set("remove", roleRemoveSubCommand)
+        this.commands.set("add", roleAddSubCommand)
+        this.commands.set("list", roleListSubCommand)
+        this.commands.set("remove", roleRemoveSubCommand)
 
         this.data = new SlashCommandBuilder()
             .setName("role")
@@ -42,7 +43,7 @@ export class RoleCommand extends BaseCommand {
     @Roles(Role.ADMIN)
     public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
         const subcommand = interaction.options.getSubcommand()
-        const command = commands.get(subcommand)
+        const command = this.commands.get(subcommand)
         if (!command) return
         await command.execute(interaction, user)
     }
