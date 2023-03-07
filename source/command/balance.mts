@@ -15,7 +15,7 @@ export class BalanceCommand implements BaseCommand<SlashCommandBuilder> {
     }
 
     public async execute(interaction: ChatInputCommandInteraction): Promise<void> {
-        const user = await getUserIfNotExistThenCreate(interaction.user.id)
+        const user = await getUserIfNotExistThenCreate(interaction.user.id);
 
         const embed = new EmbedBuilder()
             .setTitle("Balance")
@@ -28,6 +28,6 @@ export class BalanceCommand implements BaseCommand<SlashCommandBuilder> {
                 }
             ])
 
-        await interaction.reply({embeds: [embed]})
+        await interaction.reply({embeds: [embed]});
     }
 }

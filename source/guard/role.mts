@@ -16,11 +16,11 @@ export const Roles = (...roles: Role[]) => {
     ) {
         const method = descriptor.value!
         descriptor.value = async function (interaction, _) {
-            const userFind = await getUserIfNotExistThenCreate(interaction.user.id)
+            const userFind = await getUserIfNotExistThenCreate(interaction.user.id);
             if (!roles.some((role) => userFind.roles.includes(role))) {
                 throw new AccessDenied()
             }
-            return await method.apply(this, [interaction, userFind])
+            return await method.apply(this, [interaction, userFind]);
         }
     }
 }

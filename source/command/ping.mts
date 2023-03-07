@@ -1,9 +1,9 @@
-import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js"
+import {ChatInputCommandInteraction, SlashCommandBuilder} from "discord.js";
 
-import {BaseCommand} from "./base.mjs"
+import {BaseCommand} from "./base.mjs";
 
-import {Role} from "../enum/role.mjs"
-import {Roles} from "../guard/role.mjs"
+import {Role} from "../enum/role.mjs";
+import {Roles} from "../guard/role.mjs";
 import {User} from "../database/model/user.mjs";
 
 export class PingCommand implements BaseCommand<SlashCommandBuilder> {
