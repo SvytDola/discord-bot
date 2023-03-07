@@ -15,12 +15,18 @@ export const Roles = (...roles: Role[]) => {
         descriptor: TypedPropertyDescriptor<OnInteractionUser>
     ) {
         const method = descriptor.value!
+        /**
+         *
+         * @param interaction
+         * @param _ Первоначально этот параметр undefined, предназначен лишь
+         * для того чтобы уменьшить колчичество запросов к базе данных
+         */
         descriptor.value = async function (interaction, _) {
-            const userFind = await getUserIfNotExistThenCreate(interaction.user.id);
-            if (!roles.some((role) => userFind.roles.includes(role))) {
+            const user = await getUserIfNotExistThenCreate(interaction.user.id);
+            if (!roles.some((role) => user.roles.includes(role))) {
                 throw new AccessDenied()
             }
-            return await method.apply(this, [interaction, userFind]);
+            return await method.apply(this, [interaction, user]);
         }
     }
 }
