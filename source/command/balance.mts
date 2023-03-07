@@ -5,12 +5,10 @@ import {BaseCommand} from "./base.mjs"
 import {EMBED_COLOR} from "../config/index.mjs";
 import {getUserIfNotExistThenCreate} from "../service/user.mjs";
 
-export class BalanceCommand extends BaseCommand {
+export class BalanceCommand implements BaseCommand<SlashCommandBuilder> {
     public data: SlashCommandBuilder
 
     constructor() {
-        super();
-
         this.data = new SlashCommandBuilder()
             .setName("balance")
             .setDescription("Replies with your balance.")

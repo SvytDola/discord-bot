@@ -7,12 +7,10 @@ import {getUserIfNotExistThenCreate} from "../../service/user.mjs"
 import {UserDoesNotHaveThisRole} from "../../error/role.mjs"
 
 
-export class RoleRemoveSubCommand extends BaseCommand {
-    public data: SlashCommandSubcommandBuilder
+export class RoleRemoveSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
+    public data: SlashCommandSubcommandBuilder;
 
     constructor() {
-        super()
-
         this.data = new SlashCommandSubcommandBuilder()
             .setName("remove")
             .setDescription("Remove a role from a user.")
@@ -32,21 +30,18 @@ export class RoleRemoveSubCommand extends BaseCommand {
     }
 
     async execute(interaction: ChatInputCommandInteraction, user: User) {
-        return Promise.resolve(undefined)
+        const [roleIdNumber, role] = await validateRole(interaction)
+
+        const userId = interaction.options.getUser("user")?.id!
+        user = await getUserIfNotExistThenCreate(userId);
+
+        if (!user.roles.includes(roleIdNumber))
+            throw new UserDoesNotHaveThisRole(role)
+
+        user.roles = user.roles.filter((role) => role !== roleIdNumber)
+
+        await user.save()
+        await interaction.reply("Role removed.")
     }
 
-}
-export async function removeRole(interaction: ChatInputCommandInteraction, user: User) {
-    const [roleIdNumber, role] = await validateRole(interaction)
-
-    const userId = interaction.options.getUser("user")?.id!
-    user = await getUserIfNotExistThenCreate(userId);
-
-    if (!user.roles.includes(roleIdNumber))
-        throw new UserDoesNotHaveThisRole(role)
-
-    user.roles = user.roles.filter((role) => role !== roleIdNumber)
-
-    await user.save()
-    await interaction.reply("Role removed.")
 }

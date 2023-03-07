@@ -1,2 +1,2 @@
-export {onReady} from "./ready.mjs"
-export {onInteractionCreate} from "./interaction.mjs"
+export {onReady} from "./ready.mjs";
+export {onInteractionCreate} from "./interaction.mjs";

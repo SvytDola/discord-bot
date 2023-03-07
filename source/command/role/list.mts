@@ -1,28 +1,25 @@
-import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js"
+import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js";
 
-import {Role} from "../../enum/role.mjs"
-import {EMBED_COLOR} from "../../config/index.mjs"
-import {BaseCommand} from "../base.mjs"
-import {User} from "../../database/model/user.mjs"
+import {Role} from "../../enum/role.mjs";
+import {EMBED_COLOR} from "../../config/index.mjs";
+import {BaseCommand} from "../base.mjs";
 
 
 const StringIsNumber = (value: any) => {
-    return isNaN(Number(value))
+    return isNaN(Number(value));
 };
 
-export class RoleListSubCommand extends BaseCommand {
-    public data: SlashCommandSubcommandBuilder
+export class RoleListSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
+    public data: SlashCommandSubcommandBuilder;
 
     constructor() {
-        super()
-
         this.data = new SlashCommandSubcommandBuilder()
             .setName("list")
-            .setDescription("Return all roles.")
+            .setDescription("Return all roles.");
     }
 
-    async execute (interaction: ChatInputCommandInteraction, user: User) {
-        const fields: any = []
+    async execute (interaction: ChatInputCommandInteraction) {
+        const fields: any = [];
 
         for (const val of Object.keys(Role).filter(StringIsNumber)) {
             const field = {
@@ -37,8 +34,8 @@ export class RoleListSubCommand extends BaseCommand {
             .setTitle("Permission roles")
             .setDescription("Roles responsible for moderating the bot.")
             .setFields(fields)
-            .setTimestamp()
+            .setTimestamp();
 
-        await interaction.reply({embeds: [embed]})
+        await interaction.reply({embeds: [embed]});
     }
 }

@@ -5,5 +5,5 @@ export async function create(from: string, to: string, coins: number) {
         from,
         to,
         coins
-    })
+    });
 }

@@ -1,10 +1,10 @@
-import {Sequelize, DataTypes, Model} from "sequelize"
+import {Sequelize, DataTypes, Model} from "sequelize";
 
 export class Transaction extends Model {
-    declare id: string
-    declare from: string
-    declare to: string
-    declare coins: number
+    declare id: string;
+    declare from: string;
+    declare to: string;
+    declare coins: number;
 }
 
 export function getTransactionsRepository(sequelize: Sequelize) {
@@ -23,5 +23,5 @@ export function getTransactionsRepository(sequelize: Sequelize) {
         coins: {
             type: DataTypes.DOUBLE
         }
-    }, {sequelize})
+    }, {sequelize});
 }

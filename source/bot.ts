@@ -11,21 +11,21 @@ import {onInteractionCreate, onReady} from "./event/index.mjs"
 import {CLIENT_ID, DISCORD_TOKEN, GUILD_ID} from "./config/index.mjs"
 
 async function main() {
-    await sequelize.sync()
+    await sequelize.sync();
 
-    const client = new Client({intents: [GatewayIntentBits.Guilds]})
+    const client = new Client({intents: [GatewayIntentBits.Guilds]});
 
-    client.addListener(Events.ClientReady, onReady)
-    client.addListener(Events.InteractionCreate, onInteractionCreate)
+    client.addListener(Events.ClientReady, onReady);
+    client.addListener(Events.InteractionCreate, onInteractionCreate);
 
-    const jsonCommands = []
+    const jsonCommands = [];
 
     for (const command of commands.values()) {
-        jsonCommands.push(command.data.toJSON())
+        jsonCommands.push(command.data.toJSON());
     }
 
-    await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, false)
-    await client.login(DISCORD_TOKEN)
+    await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, false);
+    await client.login(DISCORD_TOKEN);
 }
 
-await main()
+await main();

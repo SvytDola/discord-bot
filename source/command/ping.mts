@@ -6,19 +6,17 @@ import {Role} from "../enum/role.mjs"
 import {Roles} from "../guard/role.mjs"
 import {User} from "../database/model/user.mjs";
 
-export class PingCommand extends BaseCommand {
-    public data: SlashCommandBuilder
+export class PingCommand implements BaseCommand<SlashCommandBuilder> {
+    public data: SlashCommandBuilder;
 
     constructor() {
-        super();
-
         this.data = new SlashCommandBuilder()
             .setName("ping")
-            .setDescription("Replies with Pong!")
+            .setDescription("Replies with Pong!");
     }
 
     @Roles(Role.ADMIN, Role.MODERATOR)
     public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
-        await interaction.reply("Pong!")
+        await interaction.reply("Pong!");
     }
 }

@@ -3,28 +3,28 @@ import {commands} from "../command/index.mjs"
 import {BaseError} from "../error/base.mjs"
 
 export async function onInteractionCreate(interaction: Interaction) {
-    if (!interaction.isChatInputCommand()) return
+    if (!interaction.isChatInputCommand()) return;
 
     const command = commands.get(interaction.commandName);
 
     if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`)
+        console.error(`No command matching ${interaction.commandName} was found.`);
         return
     }
 
     try {
         await command.execute(interaction);
     } catch (error) {
-        console.error(error)
+        console.error(error);
         if (error instanceof BaseError) {
-             await interaction.reply({content: error.message})
+             await interaction.reply({content: error.message});
              return
         }
 
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true})
+            await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
         } else {
-            await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true})
+            await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true});
         }
     }
 }

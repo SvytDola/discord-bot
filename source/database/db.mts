@@ -17,5 +17,5 @@ export const sequelize = new Sequelize({
     dialect: DATABASE_DIALECT,
     port: DATABASE_PORT
 })
-export const usersRepository = getUsersRepository(sequelize)
-export const transactionsRepository = getTransactionsRepository(sequelize)
+export const usersRepository = getUsersRepository(sequelize);
+export const transactionsRepository = getTransactionsRepository(sequelize);
