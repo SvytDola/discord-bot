@@ -6,7 +6,7 @@ import {AccessDenied} from "../error/permission.mjs";
 import {getUserIfNotExistThenCreate} from "../service/user.mjs";
 
 
-type OnInteractionUser = (interaction: ChatInputCommandInteraction, user: User) => Promise<void>
+type OnInteractionUser = (interaction: ChatInputCommandInteraction, user: User) => Promise<void>;
 
 export const Roles = (...roles: Role[]) => {
     return function (
