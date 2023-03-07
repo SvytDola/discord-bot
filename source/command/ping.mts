@@ -6,13 +6,12 @@ import {Role} from "../enum/role.mjs";
 import {Roles} from "../guard/role.mjs";
 import {User} from "../database/model/user.mjs";
 
-export class PingCommand implements BaseCommand<SlashCommandBuilder> {
-    public data: SlashCommandBuilder;
+export class PingCommand extends BaseCommand<SlashCommandBuilder> {
 
     constructor() {
-        this.data = new SlashCommandBuilder()
+        super(new SlashCommandBuilder()
             .setName("ping")
-            .setDescription("Replies with Pong!");
+            .setDescription("Replies with Pong!"));
     }
 
     @Roles(Role.admin, Role.moderator)

@@ -11,12 +11,9 @@ import {getUserIfNotExistThenCreate} from "../../service/user.mjs"
 import {RoleNotFound, UserDoesNotHaveThisRole} from "../../error/role.mjs"
 
 
-
-export class RoleRemoveSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
-    public data: SlashCommandSubcommandBuilder;
-
+export class RoleRemoveSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
     constructor() {
-        this.data = new SlashCommandSubcommandBuilder()
+        super(new SlashCommandSubcommandBuilder()
             .setName("remove")
             .setDescription("Remove a role from a user.")
             .addUserOption(option =>
@@ -30,7 +27,7 @@ export class RoleRemoveSubCommand implements BaseCommand<SlashCommandSubcommandB
                     .setName("role")
                     .setDescription("Role title.")
                     .setRequired(true)
-            );
+            ));
     }
 
     @Roles(Role.admin)

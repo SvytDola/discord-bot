@@ -9,11 +9,10 @@ import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 import {Roles} from "../../guard/role.mjs";
 import {Role} from "../../enum/role.mjs";
 
-export class RoleAddSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
-    public data: SlashCommandSubcommandBuilder;
+export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
 
     constructor() {
-        this.data = new SlashCommandSubcommandBuilder()
+        super(new SlashCommandSubcommandBuilder()
             .setName("add")
             .setDescription("Add a role to the user.")
             .addUserOption(option =>
@@ -27,7 +26,7 @@ export class RoleAddSubCommand implements BaseCommand<SlashCommandSubcommandBuil
                     .setName("role")
                     .setDescription("Role title.")
                     .setRequired(true)
-            );
+            ));
     }
 
     @Roles(Role.admin)

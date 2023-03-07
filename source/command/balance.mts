@@ -5,13 +5,12 @@ import {BaseCommand} from "./base.mjs"
 import {EMBED_COLOR} from "../config/index.mjs";
 import {getUserIfNotExistThenCreate} from "../service/user.mjs";
 
-export class BalanceCommand implements BaseCommand<SlashCommandBuilder> {
-    public data: SlashCommandBuilder
+export class BalanceCommand extends BaseCommand<SlashCommandBuilder> {
 
     constructor() {
-        this.data = new SlashCommandBuilder()
+        super(new SlashCommandBuilder()
             .setName("balance")
-            .setDescription("Replies with your balance.")
+            .setDescription("Replies with your balance."));
     }
 
     public async execute(interaction: ChatInputCommandInteraction): Promise<void> {

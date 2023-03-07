@@ -1,18 +1,18 @@
+import {APIEmbedField} from "discord-api-types/payloads/v10"
 import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js";
+
+import {BaseCommand} from "../base.mjs";
 
 import {Role} from "../../enum/role.mjs";
 import {EMBED_COLOR} from "../../config/index.mjs";
-import {BaseCommand} from "../base.mjs";
-import {APIEmbedField} from "discord-api-types/payloads/v10"
 
 
-export class RoleListSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
-    public data: SlashCommandSubcommandBuilder;
+export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
 
     constructor() {
-        this.data = new SlashCommandSubcommandBuilder()
+        super(new SlashCommandSubcommandBuilder()
             .setName("list")
-            .setDescription("Return all roles.");
+            .setDescription("Return all roles."));
     }
 
     async execute(interaction: ChatInputCommandInteraction) {

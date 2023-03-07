@@ -5,17 +5,17 @@ import {
     ChatInputCommandInteraction, Collection,
 } from "discord.js";
 
-export interface BaseCommand<T> {
-    data: T;
+export abstract class BaseCommand<T> {
+    protected constructor(public data: T) {}
 
-    execute(interaction: ChatInputCommandInteraction, ...args: any): Promise<void>;
+    abstract execute(interaction: ChatInputCommandInteraction, ...args: any): Promise<void>;
 }
 
-export class BaseSubCommand implements BaseCommand<SlashCommandSubcommandsOnlyBuilder> {
+export class BaseSubCommand extends BaseCommand<SlashCommandSubcommandsOnlyBuilder> {
     public commands: Collection<string, BaseCommand<SlashCommandSubcommandBuilder>>;
 
     constructor(public data: SlashCommandSubcommandsOnlyBuilder, commands: BaseCommand<SlashCommandSubcommandBuilder>[]) {
-
+        super(data);
         this.commands = new Collection<string, BaseCommand<SlashCommandSubcommandBuilder>>();
         for (const command of commands) {
             this.data.addSubcommand(command.data);
