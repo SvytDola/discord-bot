@@ -3,6 +3,7 @@ import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder
 import {Role} from "../../enum/role.mjs";
 import {EMBED_COLOR} from "../../config/index.mjs";
 import {BaseCommand} from "../base.mjs";
+import {APIEmbedField} from "discord-api-types/payloads/v10"
 
 
 const StringIsNumber = (value: any) => {
@@ -18,15 +19,15 @@ export class RoleListSubCommand implements BaseCommand<SlashCommandSubcommandBui
             .setDescription("Return all roles.");
     }
 
-    async execute (interaction: ChatInputCommandInteraction) {
-        const fields: any = [];
+    async execute(interaction: ChatInputCommandInteraction) {
+        const fields: APIEmbedField[] = [];
 
         for (const val of Object.keys(Role).filter(StringIsNumber)) {
             const field = {
                 name: val,
                 value: `${Role[val as any]}`
             }
-            fields.push(field)
+            fields.push(field);
         }
 
         const embed = new EmbedBuilder()

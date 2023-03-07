@@ -5,6 +5,8 @@ import {BaseCommand} from "../base.mjs"
 import {User} from "../../database/model/user.mjs"
 import {getUserIfNotExistThenCreate} from "../../service/user.mjs"
 import {UserDoesNotHaveThisRole} from "../../error/role.mjs"
+import {Roles} from "../../guard/role.mjs";
+import {Role} from "../../enum/role.mjs";
 
 
 export class RoleRemoveSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
@@ -29,6 +31,7 @@ export class RoleRemoveSubCommand implements BaseCommand<SlashCommandSubcommandB
 
     }
 
+    @Roles(Role.ADMIN)
     async execute(interaction: ChatInputCommandInteraction, user: User) {
         const [roleIdNumber, role] = await validateRole(interaction)
 

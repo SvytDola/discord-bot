@@ -9,7 +9,7 @@ import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 import {Roles} from "../../guard/role.mjs";
 import {Role} from "../../enum/role.mjs";
 
-export class RoleAddSubCommand implements BaseCommand {
+export class RoleAddSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
     public data: SlashCommandSubcommandBuilder;
 
     constructor() {
