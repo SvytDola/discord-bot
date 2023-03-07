@@ -6,10 +6,6 @@ import {BaseCommand} from "../base.mjs";
 import {APIEmbedField} from "discord-api-types/payloads/v10"
 
 
-const StringIsNumber = (value: any) => {
-    return isNaN(Number(value));
-};
-
 export class RoleListSubCommand implements BaseCommand<SlashCommandSubcommandBuilder> {
     public data: SlashCommandSubcommandBuilder;
 
@@ -21,11 +17,12 @@ export class RoleListSubCommand implements BaseCommand<SlashCommandSubcommandBui
 
     async execute(interaction: ChatInputCommandInteraction) {
         const fields: APIEmbedField[] = [];
+        const roles = Object.keys(Role) as Role[];
 
-        for (const val of Object.keys(Role).filter(StringIsNumber)) {
+        for (const role of roles.slice(0, roles.length / 2 + 1)) {
             const field = {
-                name: val,
-                value: `${Role[val as any]}`
+                name: role,
+                value: `${Role[role]}`
             }
             fields.push(field);
         }

@@ -15,7 +15,7 @@ export class PingCommand implements BaseCommand<SlashCommandBuilder> {
             .setDescription("Replies with Pong!");
     }
 
-    @Roles(Role.ADMIN, Role.MODERATOR)
+    @Roles(Role.admin, Role.moderator)
     public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
         await interaction.reply("Pong!");
     }

@@ -3,7 +3,7 @@ import {validateRole} from "./validate.mjs";
 
 import {User} from "../../database/model/user.mjs";
 import {BaseCommand} from "../base.mjs";
-import {RoleAlreadyExists} from "../../error/role.mjs";
+import {RoleAlreadyExists, RoleNotFound} from "../../error/role.mjs";
 
 import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 import {Roles} from "../../guard/role.mjs";
@@ -30,21 +30,23 @@ export class RoleAddSubCommand implements BaseCommand<SlashCommandSubcommandBuil
             );
     }
 
-    @Roles(Role.ADMIN)
+    @Roles(Role.admin)
     public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
-        const [roleIdNumber, role] = await validateRole(interaction);
+        const role = interaction.options.getString("role")!;
+
+        if (!validateRole(role)) throw new RoleNotFound(role);
+
 
         const userId = interaction.options.getUser("user")?.id!;
         user = await getUserIfNotExistThenCreate(userId);
 
-        if (user.roles.includes(roleIdNumber))
+        if (user.roles.includes(role))
             throw new RoleAlreadyExists(role);
 
 
-        user.roles = [...user.roles, roleIdNumber];
+        user.roles = [...user.roles, role];
 
         await user.save();
         await interaction.reply("Role added.");
     }
-
 }

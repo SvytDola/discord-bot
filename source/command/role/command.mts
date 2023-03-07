@@ -7,9 +7,6 @@ import {BaseSubCommand} from "../base.mjs";
 import {RoleAddSubCommand} from "./add.mjs";
 import {RoleListSubCommand} from "./list.mjs";
 import {RoleRemoveSubCommand} from "./remove.mjs";
-
-
-
 export class RoleCommand extends BaseSubCommand {
     constructor() {
         super(
