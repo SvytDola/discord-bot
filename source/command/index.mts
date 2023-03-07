@@ -8,8 +8,14 @@ const commands: Collection<string,
     BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
     new Collection<string, BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>>()
 
-commands.set("ping", new PingCommand());
-commands.set("role", new RoleCommand());
-commands.set("balance", new BalanceCommand());
+const dataCommands = [
+    new PingCommand(),
+    new RoleCommand(),
+    new BalanceCommand()
+]
 
-export {commands}
+for (const command of dataCommands) {
+    commands.set(command.data.name, command);
+}
+
+export {commands};
