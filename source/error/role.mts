@@ -15,6 +15,6 @@ export class RoleAlreadyExists extends BaseError {
 
 export class UserDoesNotHaveThisRole extends BaseError {
     constructor(name: string) {
-        super(`You don't have that role '${name}'.`);
+        super(`This user don't have that role '${name}'.`);
     }
 }
