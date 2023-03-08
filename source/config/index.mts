@@ -12,3 +12,4 @@ export const DATABASE_PORT = +process.env["DATABASE_PORT"]!;
 export const GUILD_ID = process.env["GUILD_ID"]!;
 export const CLIENT_ID = process.env["CLIENT_ID"]!;
 export const EMBED_COLOR = 0x89CFF0;
+export const NAME_TOKEN = process.env["NAME_TOKEN"]!;

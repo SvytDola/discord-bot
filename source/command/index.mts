@@ -1,8 +1,9 @@
 import {Collection, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder} from "discord.js";
+
 import {PingCommand} from "./ping.mjs";
 import {BaseCommand} from "./base.mjs";
 import {RoleCommand} from "./role/command.mjs"
-import {BalanceCommand} from "./balance.mjs";
+import { BalanceCommand } from "./balance/command.mjs";
 
 const commands: Collection<string,
     BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
@@ -11,7 +12,8 @@ const commands: Collection<string,
 const dataCommands = [
     new PingCommand(),
     new RoleCommand(),
-    new BalanceCommand()
+    new BalanceCommand(),
+
 ];
 
 for (const command of dataCommands) {

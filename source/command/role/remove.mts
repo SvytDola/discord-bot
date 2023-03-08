@@ -32,11 +32,11 @@ export class RoleRemoveSubCommand extends BaseCommand<SlashCommandSubcommandBuil
 
     @Roles(Role.admin)
     async execute(interaction: ChatInputCommandInteraction, user: User) {
-        const role = interaction.options.getString("role")!;
+        const role = interaction.options.getString("role", true);
 
         if (!validateRole(role)) throw new RoleNotFound(role);
 
-        const userId = interaction.options.getUser("user")?.id!;
+        const userId = interaction.options.getUser("user", true).id;
         user = await getUserIfNotExistThenCreate(userId);
 
         if (!user.roles.includes(role))

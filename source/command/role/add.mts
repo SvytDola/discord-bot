@@ -31,7 +31,7 @@ export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder
 
     @Roles(Role.admin)
     public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
-        const role = interaction.options.getString("role")!;
+        const role = interaction.options.getString("role", true);
 
         if (!validateRole(role)) throw new RoleNotFound(role);
 
