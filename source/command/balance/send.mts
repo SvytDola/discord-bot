@@ -42,6 +42,9 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         userFrom.balance = temp;
         userTo.balance += tokens;
 
+        await userFrom.save();
+        await userTo.save();
+
         await createTransaction(userFrom.id, userTo.id, tokens);
     }
     
