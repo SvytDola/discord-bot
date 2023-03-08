@@ -1,11 +1,11 @@
 import {
     Client,
     GatewayIntentBits,
-    Events
+    Events, Collection, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder
 } from "discord.js";
 
 import {sequelize} from "./database/db.mjs";
-import {commands} from "./command/index.mjs";
+import {BalanceCommand, BaseCommand, FaucetCommand, PingCommand, RoleCommand} from "./command/index.mjs";
 import {registerCommands} from "./register/commands.mjs";
 import {onInteractionCreate, onReady} from "./event/index.mjs";
 import {CLIENT_ID, DISCORD_TOKEN, GUILD_ID} from "./config/index.mjs";
@@ -16,6 +16,22 @@ type AppConfiguration = {
 
 async function getApp(config: AppConfiguration) {
     await sequelize.sync();
+
+    const commands: Collection<string,
+        BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
+        new Collection<string, BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>>();
+
+    const dataCommands = [
+        new PingCommand(),
+        new RoleCommand(),
+        new BalanceCommand(),
+        new FaucetCommand()
+    ];
+
+    for (const command of dataCommands) {
+        commands.set(command.data.name, command);
+    }
+
 
     const client = new Client({intents: [GatewayIntentBits.Guilds]});
 
