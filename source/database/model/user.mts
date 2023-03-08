@@ -7,6 +7,8 @@ export class User extends Model {
     declare balance: number;
     declare marry: string[];
     declare roles: Role[];
+    declare createdAt: Date;
+    declare updatedAt: Date;
 }
 
 export function getUsersRepository(sequelize: Sequelize): typeof User {

@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import {transactionsRepository} from "../database/db.mjs";
 
-export async function create(from: string, to: string, coins: number) {
+export async function createTransaction(from: string, to: string, coins: number) {
     return await transactionsRepository.create({
         from,
         to,

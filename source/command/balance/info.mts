@@ -1,14 +1,14 @@
-import { 
+import {
     CacheType,
     ChatInputCommandInteraction,
     SlashCommandSubcommandBuilder,
     EmbedBuilder,
     APIEmbedField
 } from "discord.js";
-import { BaseCommand } from "../base.mjs";
-import { EMBED_COLOR, NAME_TOKEN } from "../../config/index.mjs";
-import { getUserIfNotExistThenCreate } from "../../service/user.mjs";
-import { getTransactionsFromUser } from "../../service/transaction.mjs";
+import {BaseCommand} from "../base.mjs";
+import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
+import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
+import {getTransactionsFromUser} from "../../service/transaction.mjs";
 
 export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBuilder> {
     constructor() {
@@ -21,12 +21,12 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
                         .setName("user")
                         .setDescription("Mention.")
                         .setRequired(false)
-            )
+                )
         );
     }
 
     async execute(interaction: ChatInputCommandInteraction<CacheType>) {
-        
+
         const userId = interaction.options.getUser("user")?.id;
         const user = await getUserIfNotExistThenCreate(
             userId === undefined ? interaction.user.id : userId
@@ -43,13 +43,17 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
                 value: `<@${transaction.from}> send ${transaction.coins} ${NAME_TOKEN} to <@${transaction.to}>`
             });
         }
-
+        const url = interaction.user.avatarURL();
         const embed = new EmbedBuilder()
             .setTitle("Balance")
             .setColor(EMBED_COLOR)
             .setDescription(`${user.balance.toString()} ${NAME_TOKEN}`)
             .setTimestamp()
             .setFields(fields)
+            .setAuthor({
+                name: interaction.user.username,
+                iconURL: url == null ? interaction.user.defaultAvatarURL : url
+            });
 
         await interaction.reply({embeds: [embed]});
     }
