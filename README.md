@@ -18,4 +18,7 @@ DISCORD_TOKEN=""
 # Test server
 GUILD_ID=""
 CLIENT_ID=""
+
+# 
+NAME_TOKEN=""
 ```
