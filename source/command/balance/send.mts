@@ -1,6 +1,6 @@
-import { CacheType, ChatInputCommandInteraction, SlashCommandSubcommandBuilder } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder } from "discord.js";
 import { BaseCommand } from "../base.mjs";
-import { NAME_TOKEN } from "../../config/index.mjs";
+import { EMBED_COLOR, NAME_TOKEN } from "../../config/index.mjs";
 import { getUserIfNotExistThenCreate } from "../../service/user.mjs";
 import { InadequateBalance } from "../../error/balance.mjs";
 import { create as createTransaction } from "../../service/transaction.mjs";
@@ -14,7 +14,7 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
                 .setDescription("Send tokens to user")
                 .addNumberOption(option => 
                     option
-                        .setName(NAME_TOKEN)
+                        .setName("tokens")
                         .setDescription("Number of token.")
                         .setRequired(true)
                 )
@@ -27,12 +27,12 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
     
-    async execute(interaction: ChatInputCommandInteraction<CacheType>, ...args: any): Promise<void> {
-        const userId = interaction.options.getUser("user", true).id;
-        const tokens = interaction.options.getNumber(NAME_TOKEN, true)
+    async execute(interaction: ChatInputCommandInteraction<CacheType>): Promise<void> {
+        const userDiscordFrom = interaction.options.getUser("user", true);
+        const tokens = interaction.options.getNumber("tokens", true);
 
         const userFrom = await getUserIfNotExistThenCreate(interaction.user.id);
-        const userTo = await getUserIfNotExistThenCreate(userId);
+        const userTo = await getUserIfNotExistThenCreate(userDiscordFrom.id);
 
         const temp = userFrom.balance - tokens;
         
@@ -45,7 +45,19 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         await userFrom.save();
         await userTo.save();
 
-        await createTransaction(userFrom.id, userTo.id, tokens);
-    }
-    
+        const transaction = await createTransaction(userFrom.id, userTo.id, tokens);
+        
+        const url = interaction.user.avatarURL();
+
+        const embed = new EmbedBuilder()
+            .setTitle(`Id transaction ${transaction.id}`)
+            .setDescription(`${interaction.user.username} send ${transaction.coins} ${NAME_TOKEN} to ${userDiscordFrom.username}`)
+            .setAuthor({ 
+                name: interaction.user.username,
+                iconURL: url == null ? interaction.user.defaultAvatarURL : url
+            })
+            .setColor(EMBED_COLOR);
+
+        await interaction.reply({embeds: [embed]});
+    }    
 }

@@ -15,10 +15,12 @@ export async function findOne(id: string) {
     });
 }
 
-export async function getTransactionFromUser(userId: string) {
-    return await transactionsRepository.findOne({
+export async function getTransactionsFromUser(userId: string, limit: number = 5) {
+    return await transactionsRepository.findAll({
         where: {
             [Op.or]: [{from: userId}, {to: userId}]
-        }
+        },
+        limit,
+        order: [["createdAt", "DESC"]] 
     });
 }

@@ -5,6 +5,8 @@ export class Transaction extends Model {
     declare from: string;
     declare to: string;
     declare coins: number;
+    declare createdAt: Date;
+    declare updatedAt: Date;
 }
 
 export function getTransactionsRepository(sequelize: Sequelize) {

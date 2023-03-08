@@ -2,11 +2,13 @@ import {
     CacheType,
     ChatInputCommandInteraction,
     SlashCommandSubcommandBuilder,
-    EmbedBuilder
+    EmbedBuilder,
+    APIEmbedField
 } from "discord.js";
 import { BaseCommand } from "../base.mjs";
 import { EMBED_COLOR, NAME_TOKEN } from "../../config/index.mjs";
 import { getUserIfNotExistThenCreate } from "../../service/user.mjs";
+import { getTransactionsFromUser } from "../../service/transaction.mjs";
 
 export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBuilder> {
     constructor() {
@@ -30,16 +32,24 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
             userId === undefined ? interaction.user.id : userId
         );
 
+
+        const transactions = await getTransactionsFromUser(user.id)
+
+        const fields: APIEmbedField[] = [];
+
+        for (const transaction of transactions) {
+            fields.push({
+                name: transaction.createdAt.toLocaleString(),
+                value: `<@${transaction.from}> send ${transaction.coins} ${NAME_TOKEN} to <@${transaction.to}>`
+            });
+        }
+
         const embed = new EmbedBuilder()
             .setTitle("Balance")
             .setColor(EMBED_COLOR)
-            .setDescription("Info of balance")
+            .setDescription(`${user.balance.toString()} ${NAME_TOKEN}`)
             .setTimestamp()
-            .setFields([
-                {
-                    name: NAME_TOKEN, value: user.balance.toString()
-                }
-            ]);
+            .setFields(fields)
 
         await interaction.reply({embeds: [embed]});
     }
