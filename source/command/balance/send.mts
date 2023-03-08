@@ -51,13 +51,15 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
 
         const embed = new EmbedBuilder()
             .setTitle(`Id transaction ${transaction.id}`)
-            .setDescription(`${interaction.user.username} send ${transaction.coins} ${NAME_TOKEN} to ${userDiscordFrom.username}`)
+            .setDescription(
+                `${interaction.user.username} send ${transaction.coins} ${NAME_TOKEN} to ${userDiscordFrom.username}`
+            )
             .setAuthor({
                 name: interaction.user.username,
                 iconURL: url == null ? interaction.user.defaultAvatarURL : url
             })
             .setColor(EMBED_COLOR);
 
-        await interaction.reply({embeds: [embed]});
+        await interaction.reply({embeds: [embed], ephemeral: true});
     }
 }

@@ -14,7 +14,6 @@ export class FaucetCommand extends BaseCommand<SlashCommandBuilder> {
                 .setName("faucet")
                 .setDescription("Get test tokens.")
         );
-
     }
 
     async execute(interaction: ChatInputCommandInteraction): Promise<void> {
@@ -22,10 +21,10 @@ export class FaucetCommand extends BaseCommand<SlashCommandBuilder> {
 
         user.balance += 0.1;
 
-        await user.save()
+        await user.save();
 
         await createTransaction(CLIENT_ID, user.id, 0.1);
-        await interaction.reply("Faucet confirmed.")
+        await interaction.reply("Faucet confirmed.");
     }
 
 }

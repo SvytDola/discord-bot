@@ -9,8 +9,13 @@ import {commands} from "./command/index.mjs";
 import {registerCommands} from "./register/commands.mjs";
 import {onInteractionCreate, onReady} from "./event/index.mjs";
 import {CLIENT_ID, DISCORD_TOKEN, GUILD_ID} from "./config/index.mjs";
+import {hideBin} from "yargs/helpers";
 
-async function main() {
+type AppConfiguration = {
+    pushToGlobal: boolean
+}
+
+async function getApp(config: AppConfiguration) {
     await sequelize.sync();
 
     const client = new Client({intents: [GatewayIntentBits.Guilds]});
@@ -24,8 +29,14 @@ async function main() {
         jsonCommands.push(command.data.toJSON());
     }
 
-    await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, false);
-    await client.login(DISCORD_TOKEN);
+    await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, config.pushToGlobal);
+    return client;
+}
+async function main() {
+    const app = await getApp({
+        pushToGlobal: process.argv.includes("release")
+    });
+    await app.login(DISCORD_TOKEN)
 }
 
 await main();

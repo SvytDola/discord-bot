@@ -26,13 +26,12 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
     }
 
     async execute(interaction: ChatInputCommandInteraction<CacheType>) {
+        const userDiscord = interaction.options.getUser("user");
+        const condition =  userDiscord == null;
 
-        const userId = interaction.options.getUser("user")?.id;
         const user = await getUserIfNotExistThenCreate(
-            userId === undefined ? interaction.user.id : userId
+            condition ? interaction.user.id : userDiscord.id
         );
-
-
         const transactions = await getTransactionsFromUser(user.id)
 
         const fields: APIEmbedField[] = [];
@@ -43,7 +42,7 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
                 value: `<@${transaction.from}> send ${transaction.coins} ${NAME_TOKEN} to <@${transaction.to}>`
             });
         }
-        const url = interaction.user.avatarURL();
+        const url =  condition ? interaction.user.avatarURL() : userDiscord.avatarURL();
         const embed = new EmbedBuilder()
             .setTitle("Balance")
             .setColor(EMBED_COLOR)
@@ -51,10 +50,10 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
             .setTimestamp()
             .setFields(fields)
             .setAuthor({
-                name: interaction.user.username,
+                name: condition ? interaction.user.username : userDiscord.username,
                 iconURL: url == null ? interaction.user.defaultAvatarURL : url
             });
 
-        await interaction.reply({embeds: [embed]});
+        await interaction.reply({embeds: [embed], ephemeral: true},);
     }
 }

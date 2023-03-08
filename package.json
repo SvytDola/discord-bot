@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-esm source/bot.ts",
     "build": "tsc",
-    "start": "npm run build && node dist/bot.js"
+    "start": "npm run build && node dist/bot.js release"
   },
   "repository": {
     "type": "git",
@@ -25,11 +25,9 @@
   "dependencies": {
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
+    "minimist": "^1.2.8",
     "mysql2": "^3.1.2",
     "sequelize": "^6.29.0"
   },
-  "type": "module",
-  "_moduleAliases": {
-    "@enum": "dist/source/enum"
-  }
+  "type": "module"
 }
