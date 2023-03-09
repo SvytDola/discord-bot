@@ -1,7 +1,7 @@
 import {UserWithThisIdNotFound} from "../error/user.js";
 
 import {User} from "../database/model/user.mjs";
-import {usersRepository} from "../database/db.mjs";
+import {transactionsRepository, usersRepository} from "../database/db.mjs";
 
 
 export async function find(id: string): Promise<User> {
@@ -13,7 +13,9 @@ export async function find(id: string): Promise<User> {
 }
 
 export async function create(id: string): Promise<User> {
-    return await usersRepository.create({id});
+    return await usersRepository.create({
+        id: id
+    });
 }
 
 export async function getUserIfNotExistThenCreate(id: string): Promise<User> {
@@ -30,4 +32,14 @@ export async function getUsers(size: number = 5, start: number = 0) {
         limit: size,
         order: [["balance", "DESC"]]
     });
+}
+
+
+export async function getUserWithTransactions(id: string) {
+    return await usersRepository.findOne(
+        {
+            where: {id},
+            include: transactionsRepository
+        }
+    )
 }

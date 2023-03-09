@@ -1,21 +1,30 @@
-import {Sequelize, DataTypes, Model} from "sequelize"
+import {
+    Sequelize,
+    DataTypes,
+    Model,
+    CreationOptional,
+    NonAttribute
+} from "sequelize"
+
+import {Transaction} from "./transaction.mjs";
+
 import {Role} from "../../enum/role.mjs"
 
 export class User extends Model {
     declare id: string;
     declare xp: number;
     declare balance: number;
-    declare marry: string[];
     declare roles: Role[];
-    declare createdAt: Date;
-    declare updatedAt: Date;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
+    declare transactions: NonAttribute<Transaction>;
 }
 
 export function getUsersRepository(sequelize: Sequelize): typeof User {
     return User.init({
         id: {
-            type: DataTypes.STRING,
-            primaryKey: true
+            primaryKey: true,
+            type: DataTypes.STRING
         },
         xp: {
             type: DataTypes.INTEGER,
@@ -28,6 +37,8 @@ export function getUsersRepository(sequelize: Sequelize): typeof User {
         roles: {
             type: DataTypes.JSON,
             defaultValue: []
-        }
-    }, {sequelize});
+        },
+        createdAt: DataTypes.DATE,
+        updatedAt: DataTypes.DATE,
+    }, {sequelize, tableName: "users"});
 }

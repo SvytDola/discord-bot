@@ -1,5 +1,4 @@
 import {
-    CacheType,
     ChatInputCommandInteraction,
     SlashCommandSubcommandBuilder,
     EmbedBuilder,
@@ -25,7 +24,7 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction<CacheType>) {
+    async execute(interaction: ChatInputCommandInteraction) {
         const userDiscord = interaction.options.getUser("user");
         const condition =  userDiscord == null;
 
@@ -44,9 +43,9 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
         }
         const url =  condition ? interaction.user.avatarURL() : userDiscord.avatarURL();
         const embed = new EmbedBuilder()
-            .setTitle("Balance")
+            .setTitle(`${user.balance.toString()} ${NAME_TOKEN}`)
             .setColor(EMBED_COLOR)
-            .setDescription(`${user.balance.toString()} ${NAME_TOKEN}`)
+            .setDescription(`Last ${transactions.length} transactions.`)
             .setTimestamp()
             .setFields(fields)
             .setAuthor({
@@ -54,6 +53,6 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
                 iconURL: url == null ? interaction.user.defaultAvatarURL : url
             });
 
-        await interaction.reply({embeds: [embed], ephemeral: true},);
+        await interaction.reply({embeds: [embed], ephemeral: true});
     }
 }

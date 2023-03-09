@@ -17,5 +17,12 @@ export const sequelize = new Sequelize({
     dialect: DATABASE_DIALECT,
     port: DATABASE_PORT
 })
-export const usersRepository = getUsersRepository(sequelize);
-export const transactionsRepository = getTransactionsRepository(sequelize);
+const usersRepository = getUsersRepository(sequelize);
+const transactionsRepository = getTransactionsRepository(sequelize);
+
+usersRepository.hasMany(transactionsRepository, {sourceKey: "id", foreignKey: "from", as: "transactions"});
+usersRepository.hasMany(transactionsRepository, {sourceKey: "id", foreignKey: "to", as: "transactions"});
+
+transactionsRepository.belongsTo(usersRepository, {targetKey: "id", as: "transactions"})
+
+export {usersRepository, transactionsRepository};
