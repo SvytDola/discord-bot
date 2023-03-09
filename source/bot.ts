@@ -21,6 +21,7 @@ async function getApp(config: AppConfiguration) {
         BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
         new Collection<string, BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>>();
 
+    const jsonCommands = [];
     const dataCommands = [
         new PingCommand(),
         new RoleCommand(),
@@ -30,19 +31,13 @@ async function getApp(config: AppConfiguration) {
 
     for (const command of dataCommands) {
         commands.set(command.data.name, command);
+        jsonCommands.push(command.data.toJSON());
     }
-
 
     const client = new Client({intents: [GatewayIntentBits.Guilds]});
 
     client.addListener(Events.ClientReady, onReady);
     client.addListener(Events.InteractionCreate, onInteractionCreate);
-
-    const jsonCommands = [];
-
-    for (const command of commands.values()) {
-        jsonCommands.push(command.data.toJSON());
-    }
 
     await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, config.pushToGlobal);
     return client;
