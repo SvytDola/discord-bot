@@ -35,12 +35,3 @@ export async function getUsers(size: number = 5, start: number = 0) {
         offset: start
     });
 }
-
-export async function getUserWithTransactions(id: string) {
-    return await usersRepository.findOne(
-        {
-            where: {id},
-            include: Transaction
-        }
-    )
-}
