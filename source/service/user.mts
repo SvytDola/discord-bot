@@ -4,6 +4,7 @@ import {sequelize} from "../database/db.mjs";
 import {User} from "../model/user.mjs";
 
 const usersRepository = sequelize.getRepository(User);
+
 export async function find(id: string): Promise<User> {
     const user = await usersRepository.findOne({where: {id}});
     if (!user) {
@@ -11,7 +12,6 @@ export async function find(id: string): Promise<User> {
     }
     return user;
 }
-
 
 export async function create(id: string): Promise<User> {
     return await usersRepository.create({
