@@ -71,7 +71,9 @@ async function getApp(config: AppConfiguration) {
             }
         });
 
-    await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, config.pushToGlobal);
+    const data: any = await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, config.pushToGlobal);
+    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+
     return client;
 }
 
