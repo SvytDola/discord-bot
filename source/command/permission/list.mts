@@ -3,7 +3,7 @@ import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder
 
 import {BaseCommand} from "../base.mjs";
 
-import {Role} from "../../enum/role.mjs";
+import {Permission} from "../../enum/permission.mjs";
 import {EMBED_COLOR} from "../../config/index.mjs";
 
 
@@ -17,12 +17,12 @@ export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilde
 
     async execute(interaction: ChatInputCommandInteraction) {
         const fields: APIEmbedField[] = [];
-        const roles = Object.keys(Role) as Role[];
+        const roles = Object.keys(Permission) as Permission[];
 
         for (const role of roles.slice(0, roles.length / 2 + 1)) {
             const field = {
                 name: role,
-                value: `${Role[role]}`
+                value: `${Permission[role]}`
             }
             fields.push(field);
         }

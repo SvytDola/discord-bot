@@ -5,18 +5,30 @@ import {
 } from "discord.js";
 
 import {sequelize} from "./database/db.mjs";
-import {BalanceCommand, BaseCommand, FaucetCommand, PingCommand, RoleCommand} from "./command/index.mjs";
-import {registerCommands} from "./register/commands.mjs";
+import {
+    BalanceCommand,
+    BaseCommand,
+    FaucetCommand,
+    PingCommand,
+    PermissionCommand
+} from "./command/index.mjs";
+
 import {onReady} from "./event/index.mjs";
-import {CLIENT_ID, DISCORD_TOKEN, GUILD_ID} from "./config/index.mjs";
 import {BaseError} from "./error/base.mjs";
+import {registerCommands} from "./register/commands.mjs";
+import {
+    CLIENT_ID,
+    DISCORD_TOKEN,
+    GUILD_ID
+} from "./config/index.mjs";
+import {getUserIfNotExistThenCreate} from "./service/user.mjs";
 
 type AppConfiguration = {
     pushToGlobal: boolean
 }
 
 async function getApp(config: AppConfiguration) {
-    await sequelize.sync();
+    await sequelize.sync({force: config.pushToGlobal});
 
     const commands: Collection<string,
         BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
@@ -25,7 +37,7 @@ async function getApp(config: AppConfiguration) {
     const jsonCommands = [];
     const dataCommands = [
         new PingCommand(),
-        new RoleCommand(),
+        new PermissionCommand(),
         new BalanceCommand(),
         new FaucetCommand()
     ];
@@ -48,7 +60,8 @@ async function getApp(config: AppConfiguration) {
             }
 
             try {
-                await command.execute(interaction);
+                const user = await getUserIfNotExistThenCreate(interaction.user.id);
+                await command.execute(interaction, user);
             } catch (error) {
                 if (error instanceof BaseError) {
                     await interaction.reply({content: error.message});

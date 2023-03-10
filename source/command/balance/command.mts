@@ -1,10 +1,10 @@
 import {SlashCommandBuilder} from "discord.js";
-import {BaseSubCommand} from "../base.mjs";
+import {BaseCommandSubCommands} from "../base.mjs";
 import {BalanceInfoSubcommand} from "./info.mjs";
 import {BalanceSendSubCommand} from "./send.mjs";
 import {BalanceTopSubCommand} from "./top.mjs";
 
-export class BalanceCommand extends BaseSubCommand {
+export class BalanceCommand extends BaseCommandSubCommands {
     constructor() {
         super(
             new SlashCommandBuilder()

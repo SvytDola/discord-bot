@@ -1,17 +1,18 @@
 import {
+    Collection,
+    ChatInputCommandInteraction,
     SlashCommandSubcommandBuilder,
     SlashCommandSubcommandsOnlyBuilder,
-
-    ChatInputCommandInteraction, Collection,
 } from "discord.js";
+import {User} from "../model/user.mjs";
 
 export abstract class BaseCommand<T> {
     protected constructor(public data: T) {}
 
-    abstract execute(interaction: ChatInputCommandInteraction, ...args: any): Promise<void>;
+    public abstract execute(interaction: ChatInputCommandInteraction, user: User): Promise<void>;
 }
 
-export class BaseSubCommand extends BaseCommand<SlashCommandSubcommandsOnlyBuilder> {
+export class BaseCommandSubCommands extends BaseCommand<SlashCommandSubcommandsOnlyBuilder> {
     public commands: Collection<string, BaseCommand<SlashCommandSubcommandBuilder>>;
 
     constructor(public data: SlashCommandSubcommandsOnlyBuilder, commands: BaseCommand<SlashCommandSubcommandBuilder>[]) {
@@ -23,10 +24,10 @@ export class BaseSubCommand extends BaseCommand<SlashCommandSubcommandsOnlyBuild
         }
     }
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, user: User) {
         const subcommand = interaction.options.getSubcommand();
         const command = this.commands.get(subcommand);
         if (!command) return;
-        await command.execute(interaction);
+        await command.execute(interaction, user);
     }
 }

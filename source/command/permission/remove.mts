@@ -1,48 +1,50 @@
 import {ChatInputCommandInteraction, SlashCommandSubcommandBuilder} from "discord.js"
 
-import {validateRole} from "./validate.mjs"
+import {validatePermission} from "./validate.mjs"
 
 import {BaseCommand} from "../base.mjs"
 
-import {Roles} from "../../guard/role.mjs";
-import {Role} from "../../enum/role.mjs";
-import {User} from "../../database/model/user.mjs"
+import {User} from "../../model/user.mjs";
+
+import {Permission} from "../../enum/permission.mjs";
+import {Permissions} from "../../guard/permission.mjs";
+
 import {getUserIfNotExistThenCreate} from "../../service/user.mjs"
-import {RoleNotFound, UserDoesNotHaveThisRole} from "../../error/role.mjs"
+import {PermissionNotFound, UserDoesNotHaveThisPermission} from "../../error/permission.mjs"
 
 
 export class RoleRemoveSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
     constructor() {
         super(new SlashCommandSubcommandBuilder()
             .setName("remove")
-            .setDescription("Remove a role from a user.")
+            .setDescription("Remove a permission from a user.")
             .addUserOption(option =>
                 option
                     .setName("user")
-                    .setDescription("User id.")
+                    .setDescription("Mention.")
                     .setRequired(true)
             )
             .addStringOption(option =>
                 option
-                    .setName("role")
+                    .setName("permission")
                     .setDescription("Role title.")
                     .setRequired(true)
             ));
     }
 
-    @Roles(Role.admin)
+    @Permissions(Permission.admin)
     async execute(interaction: ChatInputCommandInteraction, user: User) {
-        const role = interaction.options.getString("role", true);
+        const permissionInput = interaction.options.getString("permission", true);
 
-        if (!validateRole(role)) throw new RoleNotFound(role);
+        if (!validatePermission(permissionInput)) throw new PermissionNotFound(permissionInput);
 
         const userId = interaction.options.getUser("user", true).id;
         user = await getUserIfNotExistThenCreate(userId);
 
-        if (!user.roles.includes(role))
-            throw new UserDoesNotHaveThisRole(role);
+        if (!user.permissions.includes(permissionInput))
+            throw new UserDoesNotHaveThisPermission(permissionInput);
 
-        user.roles = user.roles.filter((role) => role !== role);
+        user.permissions = user.permissions.filter((permission) => permission != permissionInput);
 
         await user.save();
         await interaction.reply("Role removed.");

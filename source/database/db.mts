@@ -1,4 +1,4 @@
-import {Sequelize} from "sequelize";
+import {Sequelize} from "sequelize-typescript";
 
 import {
     DATABASE_NAME,
@@ -7,22 +7,20 @@ import {
     DATABASE_PASSWORD,
     DATABASE_PORT
 } from "../config/index.mjs";
-import {getUsersRepository} from "./model/user.mjs";
-import {getTransactionsRepository} from "./model/transaction.mjs";
 
-export const sequelize = new Sequelize({
+import {User} from "../model/user.mjs";
+import {Transaction} from "../model/transaction.mjs";
+
+
+const sequelize = new Sequelize({
     database: DATABASE_NAME,
     username: DATABASE_USERNAME,
     password: DATABASE_PASSWORD,
     dialect: DATABASE_DIALECT,
     port: DATABASE_PORT
-})
-const usersRepository = getUsersRepository(sequelize);
-const transactionsRepository = getTransactionsRepository(sequelize);
+});
 
-usersRepository.hasMany(transactionsRepository, {sourceKey: "id", foreignKey: "from", as: "transactions"});
-usersRepository.hasMany(transactionsRepository, {sourceKey: "id", foreignKey: "to", as: "transactions"});
+sequelize.addModels([User, Transaction]);
 
-transactionsRepository.belongsTo(usersRepository, {targetKey: "id", as: "transactions"})
+export {sequelize};
 
-export {usersRepository, transactionsRepository};

@@ -1,8 +1,16 @@
-import {CacheType, ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js";
+import {
+    EmbedBuilder,
+    ChatInputCommandInteraction,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
+
 import {BaseCommand} from "../base.mjs";
-import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
+
+import {User} from "../../model/user.mjs";
 import {InadequateBalance} from "../../error/balance.mjs";
+import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
+
+import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 import {createTransaction as createTransaction} from "../../service/transaction.mjs";
 
 export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
@@ -27,11 +35,10 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction<CacheType>): Promise<void> {
+    async execute(interaction: ChatInputCommandInteraction, userFrom: User): Promise<void> {
         const userDiscordFrom = interaction.options.getUser("user", true);
         const tokens = interaction.options.getNumber("tokens", true);
 
-        const userFrom = await getUserIfNotExistThenCreate(interaction.user.id);
         const userTo = await getUserIfNotExistThenCreate(userDiscordFrom.id);
 
         const temp = userFrom.balance - tokens;

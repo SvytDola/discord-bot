@@ -1,5 +1,12 @@
+import {
+    APIEmbedField,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    SlashCommandSubcommandBuilder
+} from "discord.js";
+
 import {BaseCommand} from "../base.mjs";
-import {APIEmbedField, ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder} from "discord.js";
+import {User} from "../../model/user.mjs";
 import {getUsers} from "../../service/user.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 
@@ -14,7 +21,7 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction): Promise<void> {
+    async execute(interaction: ChatInputCommandInteraction, _: User): Promise<void> {
 
         const users = await getUsers();
 
@@ -32,7 +39,7 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
             .setTimestamp()
             .setColor(EMBED_COLOR)
             .setTitle("Top of balance")
-            .setDescription("First five users")
+            .setDescription("First five users");
 
         await interaction.reply({embeds: [embed]});
     }
