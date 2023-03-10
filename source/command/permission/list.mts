@@ -12,7 +12,7 @@ export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilde
     constructor() {
         super(new SlashCommandSubcommandBuilder()
             .setName("list")
-            .setDescription("Return all roles."));
+            .setDescription("Return all permission roles."));
     }
 
     async execute(interaction: ChatInputCommandInteraction) {

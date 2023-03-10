@@ -14,34 +14,36 @@ import {
 } from "../../error/permission.mjs";
 
 import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
+import {NAME_PERMISSION_ROLE_OPTION, NAME_USER_OPTION} from "./options.mjs";
+
 
 export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
 
     constructor() {
         super(new SlashCommandSubcommandBuilder()
             .setName("add")
-            .setDescription("Add a permission permission to the user.")
+            .setDescription("Add a permission role permission to the user.")
             .addUserOption(option =>
                 option
-                    .setName("user")
+                    .setName(NAME_USER_OPTION)
                     .setDescription("Mention.")
                     .setRequired(true)
             )
             .addStringOption(option =>
                 option
-                    .setName("permission")
-                    .setDescription("Permission title.")
+                    .setName(NAME_PERMISSION_ROLE_OPTION)
+                    .setDescription("Permission role title.")
                     .setRequired(true)
             ));
     }
 
     @Permissions(Permission.admin)
     public async execute(interaction: ChatInputCommandInteraction, _: User): Promise<void> {
-        const permission = interaction.options.getString("permission", true);
+        const permission = interaction.options.getString(NAME_PERMISSION_ROLE_OPTION, true);
 
         if (!validatePermission(permission)) throw new PermissionNotFound(permission);
 
-        const userId = interaction.options.getUser("user", true).id;
+        const userId = interaction.options.getUser(NAME_USER_OPTION, true).id;
         const user = await getUserIfNotExistThenCreate(userId);
 
         if (user.permissions.includes(permission))

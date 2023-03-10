@@ -2,7 +2,6 @@ import {UserWithThisIdNotFound} from "../error/user.js";
 
 import {sequelize} from "../database/db.mjs";
 import {User} from "../model/user.mjs";
-import {Transaction} from "../model/transaction.mjs";
 
 const usersRepository = sequelize.getRepository(User);
 export async function find(id: string): Promise<User> {
