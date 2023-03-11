@@ -10,7 +10,7 @@ import {
     BaseCommand,
     FaucetCommand,
     PingCommand,
-    PermissionCommand
+    PermissionCommand, MusicCommand
 } from "./command/index.mjs";
 
 import {onReady} from "./event/index.mjs";
@@ -39,7 +39,8 @@ async function getApp(config: AppConfiguration) {
         new PingCommand(),
         new PermissionCommand(),
         new BalanceCommand(),
-        new FaucetCommand()
+        new FaucetCommand(),
+        new MusicCommand()
     ];
 
     for (const command of dataCommands) {
