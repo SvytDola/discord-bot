@@ -3,6 +3,7 @@ import {
     GatewayIntentBits,
     Events, Collection, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, Interaction
 } from "discord.js";
+import { Player } from "discord-music-player";
 
 import {sequelize} from "./database/db.mjs";
 import {
@@ -23,12 +24,18 @@ import {
 } from "./config/index.mjs";
 import {getUserIfNotExistThenCreate} from "./service/user.mjs";
 
+declare module "discord.js" {
+    export interface Client {
+        player: Player;
+    }
+}
+
 type AppConfiguration = {
     pushToGlobal: boolean
 }
 
 async function getApp(config: AppConfiguration) {
-    await sequelize.sync({force: config.pushToGlobal});
+    await sequelize.sync();
 
     const commands: Collection<string,
         BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
@@ -48,7 +55,15 @@ async function getApp(config: AppConfiguration) {
         jsonCommands.push(command.data.toJSON());
     }
 
-    const client = new Client({intents: [GatewayIntentBits.Guilds]})
+    const client = new Client({
+        intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildVoiceStates,
+            GatewayIntentBits.DirectMessages,
+            GatewayIntentBits.MessageContent,
+            GatewayIntentBits.GuildMessages
+        ]
+    })
         .addListener(Events.ClientReady, onReady)
         .addListener(Events.InteractionCreate, async (interaction: Interaction) => {
             if (!interaction.isChatInputCommand()) return;
@@ -71,6 +86,11 @@ async function getApp(config: AppConfiguration) {
                 console.error(error);
             }
         });
+
+    // You can define the Player as *client.player* to easily access it.
+    client.player = new Player(client, {
+        leaveOnEmpty: false, // These options are optional.
+    });
 
     const data: any = await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, config.pushToGlobal);
     console.log(`Successfully reloaded ${data.length} application (/) commands.`);

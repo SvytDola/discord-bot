@@ -27,7 +27,7 @@ export async function getUserIfNotExistThenCreate(id: string): Promise<User> {
     }
 }
 
-export async function getUsers(size: number = 5, start: number = 0) {
+export async function getUsersTopBalance(size: number = 5, start: number = 0) {
     return await usersRepository.findAll({
         limit: size,
         order: [["balance", "DESC"]],

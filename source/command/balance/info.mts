@@ -46,15 +46,13 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
         }
         const url = discordUserIsNotNull ? userDiscord.avatarURL() : interaction.user.avatarURL();
         const embed = new EmbedBuilder()
+            .setThumbnail(url)
             .setTitle(`${user.balance.toString()} ${NAME_TOKEN}`)
             .setColor(EMBED_COLOR)
             .setDescription(`Last ${transactions.length} transactions.`)
             .setTimestamp()
-            .setFields(fields)
-            .setAuthor({
-                name: discordUserIsNotNull ? userDiscord.username : interaction.user.username,
-                iconURL: url == null ? interaction.user.defaultAvatarURL : url
-            });
+            .setFields(fields);
+
 
         await interaction.reply({embeds: [embed], ephemeral: true});
     }
