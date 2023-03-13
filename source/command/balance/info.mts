@@ -8,10 +8,10 @@ import {
 import {BaseCommand} from "../base.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
-import {getTransactionsFromUser} from "../../service/transaction.mjs";
-
 import {User} from "../../model/user.mjs";
+import {ServiceManager} from "../../manager/service.mjs";
+import {UsersService} from "../../service/user.mjs";
+import {TransactionsService} from "../../service/transaction.mjs";
 
 export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBuilder> {
     constructor() {
@@ -28,13 +28,16 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction, user: User) {
+    async execute(interaction: ChatInputCommandInteraction, user: User, serviceManager: ServiceManager) {
         const userDiscord = interaction.options.getUser("user");
         const discordUserIsNotNull = userDiscord != null;
 
-        if (discordUserIsNotNull) user = await getUserIfNotExistThenCreate(userDiscord.id);
+        const usersService = serviceManager.getService(UsersService);
+        const transactionsService  = serviceManager.getService(TransactionsService);
 
-        const transactions = await getTransactionsFromUser(user.id);
+        if (discordUserIsNotNull) user = await usersService.getUserIfNotExistThenCreate(userDiscord.id);
+
+        const transactions = await transactionsService.getFromUser(user.id);
 
         const fields: APIEmbedField[] = [];
 

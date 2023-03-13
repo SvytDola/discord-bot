@@ -5,6 +5,7 @@ import {BaseCommand} from "./base.mjs";
 import {User} from "../model/user.mjs";
 import {Permission} from "../enum/permission.mjs";
 import {Permissions} from "../guard/permission.mjs";
+import {ServiceManager} from "../manager/service.mjs";
 
 export class PingCommand extends BaseCommand<SlashCommandBuilder> {
 
@@ -15,7 +16,7 @@ export class PingCommand extends BaseCommand<SlashCommandBuilder> {
     }
 
     @Permissions(Permission.admin, Permission.moderator)
-    public async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
+    public async execute(interaction: ChatInputCommandInteraction, user: User, serviceManager: ServiceManager) {
         await interaction.reply("Pong!");
     }
 }

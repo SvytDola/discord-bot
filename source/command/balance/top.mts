@@ -7,8 +7,9 @@ import {
 
 import {BaseCommand} from "../base.mjs";
 import {User} from "../../model/user.mjs";
-import {getUsersTopBalance} from "../../service/user.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
+import {ServiceManager} from "../../manager/service.mjs";
+import {UsersService} from "../../service/user.mjs";
 
 
 export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
@@ -21,8 +22,9 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction, _: User): Promise<void> {
-        const users = await getUsersTopBalance();
+    async execute(interaction: ChatInputCommandInteraction, _: User, serviceManager: ServiceManager): Promise<void> {
+        const usersService = serviceManager.getService(UsersService);
+        const users = await usersService.getUsersTopBalance();
 
         const fields: APIEmbedField[] = [];
 

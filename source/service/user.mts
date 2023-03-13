@@ -1,36 +1,38 @@
+import {Service} from "./service.mjs";
+
+import {User} from "../model/user.mjs";
 import {UserWithThisIdNotFound} from "../error/user.js";
 
-import {sequelize} from "../database/db.mjs";
-import {User} from "../model/user.mjs";
 
-const usersRepository = sequelize.getRepository(User);
-
-export async function find(id: string): Promise<User> {
-    const user = await usersRepository.findOne({where: {id}});
-    if (!user) {
-        throw new UserWithThisIdNotFound(id);
+export class UsersService extends Service<User>{
+    public async find(id: string): Promise<User> {
+        const user = await this.repository.findOne({where: {id}});
+        if (!user) {
+            throw new UserWithThisIdNotFound(id);
+        }
+        return user;
     }
-    return user;
-}
 
-export async function create(id: string): Promise<User> {
-    return await usersRepository.create({
-        id: id
-    });
-}
-
-export async function getUserIfNotExistThenCreate(id: string): Promise<User> {
-    try {
-        return await find(id);
-    } catch (e) {
-        return await create(id);
+    public async create(id: string): Promise<User> {
+        return await this.repository.create({
+            id: id
+        });
     }
-}
 
-export async function getUsersTopBalance(size: number = 5, start: number = 0) {
-    return await usersRepository.findAll({
-        limit: size,
-        order: [["balance", "DESC"]],
-        offset: start
-    });
+    public async getUserIfNotExistThenCreate(id: string): Promise<User> {
+        try {
+            return await this.find(id);
+        } catch (e) {
+            return await this.create(id);
+        }
+    }
+
+    public async getUsersTopBalance(size: number = 5, start: number = 0) {
+        return await this.repository.findAll({
+            limit: size,
+            order: [["balance", "DESC"]],
+            offset: start
+        });
+    }
+
 }

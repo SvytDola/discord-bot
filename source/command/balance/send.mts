@@ -9,9 +9,9 @@ import {BaseCommand} from "../base.mjs";
 import {User} from "../../model/user.mjs";
 import {InadequateBalance} from "../../error/balance.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
-
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
-import {createTransaction as createTransaction} from "../../service/transaction.mjs";
+import {ServiceManager} from "../../manager/service.mjs";
+import {UsersService} from "../../service/user.mjs";
+import {TransactionsService} from "../../service/transaction.mjs";
 
 export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
 
@@ -35,11 +35,14 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction, userFrom: User): Promise<void> {
+    async execute(interaction: ChatInputCommandInteraction, userFrom: User, serviceManager: ServiceManager): Promise<void> {
         const userDiscordFrom = interaction.options.getUser("user", true);
         const tokens = interaction.options.getNumber("tokens", true);
 
-        const userTo = await getUserIfNotExistThenCreate(userDiscordFrom.id);
+        const usersService = serviceManager.getService(UsersService);
+        const transactionsService = serviceManager.getService(TransactionsService);
+
+        const userTo = await usersService.getUserIfNotExistThenCreate(userDiscordFrom.id);
 
         const temp = userFrom.balance - tokens;
 
@@ -52,7 +55,7 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         await userFrom.save();
         await userTo.save();
 
-        const transaction = await createTransaction(userFrom.id, userTo.id, tokens);
+        const transaction = await transactionsService.create(userFrom.id, userTo.id, tokens);
 
         const url = interaction.user.avatarURL();
 

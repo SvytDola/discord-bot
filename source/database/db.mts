@@ -1,26 +1,12 @@
-import {Sequelize} from "sequelize-typescript";
-
-import {
-    DATABASE_NAME,
-    DATABASE_USERNAME,
-    DATABASE_DIALECT,
-    DATABASE_PASSWORD,
-    DATABASE_PORT
-} from "../config/index.mjs";
+import {Sequelize, SequelizeOptions} from "sequelize-typescript";
 
 import {User} from "../model/user.mjs";
 import {Transaction} from "../model/transaction.mjs";
 
+export async function getSequelize(options: SequelizeOptions) {
+    const sequelize = new Sequelize(options);
+    sequelize.addModels([User, Transaction]);
+    await sequelize.sync();
 
-const sequelize = new Sequelize({
-    database: DATABASE_NAME,
-    username: DATABASE_USERNAME,
-    password: DATABASE_PASSWORD,
-    dialect: DATABASE_DIALECT,
-    port: DATABASE_PORT
-});
-
-sequelize.addModels([User, Transaction]);
-
-export {sequelize};
-
+    return sequelize;
+}

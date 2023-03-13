@@ -1,5 +1,4 @@
 import {ChatInputCommandInteraction, GuildMember, SlashCommandSubcommandBuilder,} from "discord.js";
-import play from "play-dl";
 
 import {
     joinVoiceChannel
@@ -44,24 +43,6 @@ export class MusicPlaySubCommand extends BaseCommand<SlashCommandSubcommandBuild
     async execute(interaction: ChatInputCommandInteraction, user: User): Promise<void> {
         if (!(interaction.member instanceof GuildMember)) return;
         if (interaction.guildId == null) return;
-
-
-        await interaction.deferReply();
-        const guildId = interaction.guildId;
-
-        const client = interaction.client;
-
-        let guildQueue = client.player.getQueue(guildId);
-
-        const linkOrTitle = interaction.options.getString(NAME_MUSIC_OPTION, true)
-
-        let queue = client.player.createQueue(interaction.guildId!);
-        await queue.join(interaction.member.voice.channel!);
-        let song = await queue.play(linkOrTitle).catch(err => {
-            console.log(err);
-            if (!guildQueue)
-                queue.stop();
-        });
-        await interaction.reply("Added track..");
+        await interaction.editReply("Added track..");
     }
 }

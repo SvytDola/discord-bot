@@ -5,11 +5,16 @@ import {
     SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 import {User} from "../model/user.mjs";
+import {ServiceManager} from "../manager/service.mjs";
 
 export abstract class BaseCommand<T> {
     protected constructor(public data: T) {}
 
-    public abstract execute(interaction: ChatInputCommandInteraction, user: User): Promise<void>;
+    public abstract execute(
+        interaction: ChatInputCommandInteraction,
+        user: User,
+        serviceManager: ServiceManager
+    ): Promise<any>;
 }
 
 export class BaseCommandSubCommands extends BaseCommand<SlashCommandSubcommandsOnlyBuilder> {
@@ -24,10 +29,10 @@ export class BaseCommandSubCommands extends BaseCommand<SlashCommandSubcommandsO
         }
     }
 
-    async execute(interaction: ChatInputCommandInteraction, user: User) {
+    async execute(interaction: ChatInputCommandInteraction, user: User, serviceManager: ServiceManager) {
         const subcommand = interaction.options.getSubcommand();
         const command = this.commands.get(subcommand);
         if (!command) return;
-        await command.execute(interaction, user);
+        await command.execute(interaction, user, serviceManager);
     }
 }

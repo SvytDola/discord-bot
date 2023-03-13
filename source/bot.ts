@@ -1,17 +1,19 @@
 import {
     Client,
     GatewayIntentBits,
-    Events, Collection, SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, Interaction
+    Events,
+    Collection,
+    Interaction
 } from "discord.js";
-import { Player } from "discord-music-player";
 
-import {sequelize} from "./database/db.mjs";
+import {getSequelize} from "./database/db.mjs";
 import {
     BalanceCommand,
     BaseCommand,
     FaucetCommand,
     PingCommand,
-    PermissionCommand, MusicCommand
+    PermissionCommand,
+    MusicCommand
 } from "./command/index.mjs";
 
 import {onReady} from "./event/index.mjs";
@@ -19,27 +21,36 @@ import {BaseError} from "./error/base.mjs";
 import {registerCommands} from "./register/commands.mjs";
 import {
     CLIENT_ID,
-    DISCORD_TOKEN,
-    GUILD_ID
+    DATABASE_DIALECT,
+    DATABASE_NAME,
+    DATABASE_PASSWORD,
+    DATABASE_PORT,
+    DATABASE_USERNAME,
+    DISCORD_TOKEN
 } from "./config/index.mjs";
-import {getUserIfNotExistThenCreate} from "./service/user.mjs";
+import {UsersService} from "./service/user.mjs";
+import {User} from "./model/user.mjs";
+import {TransactionsService} from "./service/transaction.mjs";
+import {Transaction} from "./model/transaction.mjs";
+import {ServiceManager} from "./manager/service.mjs";
 
-declare module "discord.js" {
-    export interface Client {
-        player: Player;
-    }
-}
+async function getApp() {
+    const sequelize = await getSequelize({
+        database: DATABASE_NAME,
+        username: DATABASE_USERNAME,
+        password: DATABASE_PASSWORD,
+        dialect: DATABASE_DIALECT,
+        port: DATABASE_PORT
+    });
 
-type AppConfiguration = {
-    pushToGlobal: boolean
-}
+    const serviceManager = new ServiceManager();
 
-async function getApp(config: AppConfiguration) {
-    await sequelize.sync();
+    serviceManager.setService(new UsersService(sequelize.getRepository(User)));
+    serviceManager.setService(new TransactionsService(sequelize.getRepository(Transaction)));
 
-    const commands: Collection<string,
-        BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>> =
-        new Collection<string, BaseCommand<SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder>>();
+    const usersService = serviceManager.getService<UsersService>(UsersService);
+
+    const commands = new Collection<string, BaseCommand<any>>();
 
     const jsonCommands = [];
     const dataCommands = [
@@ -76,8 +87,8 @@ async function getApp(config: AppConfiguration) {
             }
 
             try {
-                const user = await getUserIfNotExistThenCreate(interaction.user.id);
-                await command.execute(interaction, user);
+                const user = await usersService.getUserIfNotExistThenCreate(interaction.user.id);
+                await command.execute(interaction, user, serviceManager);
             } catch (error) {
                 if (error instanceof BaseError) {
                     await interaction.reply({content: error.message});
@@ -87,21 +98,13 @@ async function getApp(config: AppConfiguration) {
             }
         });
 
-    // You can define the Player as *client.player* to easily access it.
-    client.player = new Player(client, {
-        leaveOnEmpty: false, // These options are optional.
-    });
-
-    const data: any = await registerCommands(DISCORD_TOKEN, CLIENT_ID, GUILD_ID, jsonCommands, config.pushToGlobal);
+    const data: any = await registerCommands(DISCORD_TOKEN, CLIENT_ID, jsonCommands);
     console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-
     return client;
 }
 
 async function main() {
-    const app = await getApp({
-        pushToGlobal: process.argv.includes("release")
-    });
+    const app = await getApp();
     await app.login(DISCORD_TOKEN)
 }
 

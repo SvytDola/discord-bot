@@ -13,8 +13,9 @@ import {
     PermissionNotFound
 } from "../../error/permission.mjs";
 
-import {getUserIfNotExistThenCreate} from "../../service/user.mjs";
 import {NAME_PERMISSION_ROLE_OPTION, NAME_USER_OPTION} from "./options.mjs";
+import {ServiceManager} from "../../manager/service.mjs";
+import {UsersService} from "../../service/user.mjs";
 
 
 export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
@@ -38,13 +39,15 @@ export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder
     }
 
     @Permissions(Permission.admin)
-    public async execute(interaction: ChatInputCommandInteraction, _: User): Promise<void> {
+    public async execute(interaction: ChatInputCommandInteraction, _: User, serviceManager: ServiceManager): Promise<void> {
+        const usersService = serviceManager.getService(UsersService);
+
         const permission = interaction.options.getString(NAME_PERMISSION_ROLE_OPTION, true);
 
         if (!validatePermission(permission)) throw new PermissionNotFound(permission);
 
         const userId = interaction.options.getUser(NAME_USER_OPTION, true).id;
-        const user = await getUserIfNotExistThenCreate(userId);
+        const user = await usersService.getUserIfNotExistThenCreate(userId);
 
         if (user.permissions.includes(permission))
             throw new PermissionAlreadyExists(permission);
