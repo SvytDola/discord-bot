@@ -7,7 +7,7 @@ import {UserWithThisIdNotFound} from "../error/user.js";
 export class UsersService extends Service<User>{
     public async find(id: string): Promise<User> {
         const user = await this.repository.findOne({where: {id}});
-        if (!user) {
+        if (user === null) {
             throw new UserWithThisIdNotFound(id);
         }
         return user;

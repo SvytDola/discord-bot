@@ -21,7 +21,8 @@ export class Profile extends Model {
     declare guildId: string;
 
     @Column({
-        type: DataType.JSON
+        type: DataType.JSON,
+        defaultValue: []
     })
     declare roles: Role[];
 }

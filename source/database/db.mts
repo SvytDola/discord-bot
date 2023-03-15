@@ -1,12 +1,8 @@
-import {Sequelize, SequelizeOptions} from "sequelize-typescript";
+import {ModelCtor, Sequelize, SequelizeOptions} from "sequelize-typescript";
 
-import {User} from "../model/user.mjs";
-import {Transaction} from "../model/transaction.mjs";
-
-export async function getSequelize(options: SequelizeOptions) {
+export async function getSequelize(options: SequelizeOptions, models: ModelCtor[]) {
     const sequelize = new Sequelize(options);
-    sequelize.addModels([User, Transaction]);
+    sequelize.addModels(models);
     await sequelize.sync();
-
     return sequelize;
 }

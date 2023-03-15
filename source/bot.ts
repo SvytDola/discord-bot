@@ -26,11 +26,16 @@ import {
     DATABASE_USERNAME,
     DISCORD_TOKEN, GUILD_IDS
 } from "./config/index.mjs";
+
 import {UsersService} from "./service/user.mjs";
-import {User} from "./model/user.mjs";
 import {TransactionsService} from "./service/transaction.mjs";
+
+import {User} from "./model/user.mjs";
 import {Transaction} from "./model/transaction.mjs";
+
 import {ServiceManager} from "./manager/service.mjs";
+import {ProfileService} from "./service/profile.mjs";
+import {Profile} from "./model/profile.mjs";
 
 async function getApp() {
     const sequelize = await getSequelize({
@@ -39,12 +44,13 @@ async function getApp() {
         password: DATABASE_PASSWORD,
         dialect: DATABASE_DIALECT,
         port: DATABASE_PORT
-    });
+    }, [User, Profile, Transaction]);
 
     const serviceManager = new ServiceManager();
 
     serviceManager.setService(new UsersService(sequelize.getRepository(User)));
     serviceManager.setService(new TransactionsService(sequelize.getRepository(Transaction)));
+    serviceManager.setService(new ProfileService(sequelize.getRepository(Profile)))
 
     const commands = new Collection<string, BaseCommand<any>>();
 
@@ -66,8 +72,7 @@ async function getApp() {
             GatewayIntentBits.DirectMessages,
             GatewayIntentBits.MessageContent,
             GatewayIntentBits.GuildMessages
-        ]
-    })
+        ]})
         .addListener(Events.ClientReady, onReady)
         .addListener(Events.InteractionCreate, async (interaction: Interaction) => {
             await onInteractionCreate(interaction, serviceManager, commands);
