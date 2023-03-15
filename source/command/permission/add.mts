@@ -3,7 +3,6 @@ import {validatePermission} from "./validate.mjs";
 
 import {BaseCommand} from "../base.mjs";
 
-import {User} from "../../model/user.mjs";
 
 import {Permission} from "../../enum/permission.mjs";
 import {Permissions} from "../../guard/permission.mjs";
@@ -39,7 +38,7 @@ export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder
     }
 
     @Permissions(Permission.admin)
-    public async execute(interaction: ChatInputCommandInteraction, _: User, serviceManager: ServiceManager): Promise<void> {
+    public async execute(interaction: ChatInputCommandInteraction, serviceManager: ServiceManager): Promise<void> {
         const usersService = serviceManager.getService(UsersService);
 
         const permission = interaction.options.getString(NAME_PERMISSION_ROLE_OPTION, true);

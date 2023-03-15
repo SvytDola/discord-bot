@@ -6,7 +6,6 @@ import {
 } from "discord.js";
 
 import {BaseCommand} from "../base.mjs";
-import {User} from "../../model/user.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 import {ServiceManager} from "../../manager/service.mjs";
 import {UsersService} from "../../service/user.mjs";
@@ -22,7 +21,7 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction, _: User, serviceManager: ServiceManager): Promise<void> {
+    async execute(interaction: ChatInputCommandInteraction, serviceManager: ServiceManager): Promise<void> {
         const usersService = serviceManager.getService(UsersService);
         const users = await usersService.getUsersTopBalance();
 

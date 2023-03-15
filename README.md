@@ -14,11 +14,13 @@ DATABASE_PASSWORD=""
 
 # Discord
 DISCORD_TOKEN=""
+```
 
-# Test server
-GUILD_ID=""
-CLIENT_ID=""
-
-# 
-NAME_TOKEN=""
+# config.json
+```json
+{
+    "guildIds": ["guildId", "guildId"],
+    "clientId": "bot id",
+    "tokenName": "name of token"
+}
 ```

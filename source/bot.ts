@@ -12,13 +12,11 @@ import {
     BaseCommand,
     FaucetCommand,
     PingCommand,
-    PermissionCommand,
-    MusicCommand
+    PermissionCommand
 } from "./command/index.mjs";
 
-import {onReady} from "./event/index.mjs";
-import {BaseError} from "./error/base.mjs";
-import {registerCommands} from "./register/commands.mjs";
+import {onInteractionCreate, onReady} from "./event/index.mjs";
+import {registerCommandsInGuild} from "./register/commands.mjs";
 import {
     CLIENT_ID,
     DATABASE_DIALECT,
@@ -26,7 +24,7 @@ import {
     DATABASE_PASSWORD,
     DATABASE_PORT,
     DATABASE_USERNAME,
-    DISCORD_TOKEN
+    DISCORD_TOKEN, GUILD_IDS
 } from "./config/index.mjs";
 import {UsersService} from "./service/user.mjs";
 import {User} from "./model/user.mjs";
@@ -48,22 +46,17 @@ async function getApp() {
     serviceManager.setService(new UsersService(sequelize.getRepository(User)));
     serviceManager.setService(new TransactionsService(sequelize.getRepository(Transaction)));
 
-    const usersService = serviceManager.getService<UsersService>(UsersService);
-
     const commands = new Collection<string, BaseCommand<any>>();
 
-    const jsonCommands = [];
     const dataCommands = [
         new PingCommand(),
         new PermissionCommand(),
         new BalanceCommand(),
-        new FaucetCommand(),
-        new MusicCommand()
+        new FaucetCommand()
     ];
 
     for (const command of dataCommands) {
         commands.set(command.data.name, command);
-        jsonCommands.push(command.data.toJSON());
     }
 
     const client = new Client({
@@ -77,29 +70,21 @@ async function getApp() {
     })
         .addListener(Events.ClientReady, onReady)
         .addListener(Events.InteractionCreate, async (interaction: Interaction) => {
-            if (!interaction.isChatInputCommand()) return;
-
-            const command = commands.get(interaction.commandName);
-
-            if (!command) {
-                console.error(`No command matching ${interaction.commandName} was found.`);
-                return;
-            }
-
-            try {
-                const user = await usersService.getUserIfNotExistThenCreate(interaction.user.id);
-                await command.execute(interaction, user, serviceManager);
-            } catch (error) {
-                if (error instanceof BaseError) {
-                    await interaction.reply({content: error.message});
-                    return;
-                }
-                console.error(error);
-            }
+            await onInteractionCreate(interaction, serviceManager, commands);
         });
 
-    const data: any = await registerCommands(DISCORD_TOKEN, CLIENT_ID, jsonCommands);
-    console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+    const jsonGuildCommands = commands.map(value => value.data.toJSON());
+
+    for (const guildId of GUILD_IDS) {
+        await registerCommandsInGuild(
+            DISCORD_TOKEN,
+            CLIENT_ID,
+            guildId,
+            jsonGuildCommands
+        );
+    }
+
+    console.log(`Successfully reloaded  application (/) commands.`);
     return client;
 }
 

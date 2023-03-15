@@ -16,6 +16,7 @@ export class PermissionCommand extends BaseCommandSubCommands {
             [
                 new RoleAddSubCommand(),
                 new RoleListSubCommand(),
-                new RoleRemoveSubCommand()]);
+                new RoleRemoveSubCommand()
+            ]);
     }
 }

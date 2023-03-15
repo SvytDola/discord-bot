@@ -1,15 +1,15 @@
 export class ServiceManager {
-    private readonly services: any;
+    private readonly services: Map<string, any>;
 
     constructor() {
-        this.services = {};
+        this.services = new Map();
     }
 
     public getService<T extends object>(model: { new(...args: any[]): T }): T {
-        return this.services[model.name];
+        return this.services.get(model.name);
     }
 
     public setService<T extends object>(model: T) {
-        this.services[model.constructor.name] = model;
+        this.services.set(model.constructor.name, model);
     }
 }

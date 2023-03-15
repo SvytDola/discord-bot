@@ -6,7 +6,6 @@ import {
 
 import {BaseCommand} from "../base.mjs";
 
-import {User} from "../../model/user.mjs";
 import {InadequateBalance} from "../../error/balance.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 import {ServiceManager} from "../../manager/service.mjs";
@@ -35,14 +34,15 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction, userFrom: User, serviceManager: ServiceManager): Promise<void> {
-        const userDiscordFrom = interaction.options.getUser("user", true);
+    async execute(interaction: ChatInputCommandInteraction, serviceManager: ServiceManager): Promise<void> {
+        const userDiscordTo = interaction.options.getUser("user", true);
         const tokens = interaction.options.getNumber("tokens", true);
 
         const usersService = serviceManager.getService(UsersService);
         const transactionsService = serviceManager.getService(TransactionsService);
 
-        const userTo = await usersService.getUserIfNotExistThenCreate(userDiscordFrom.id);
+        const userFrom = await usersService.getUserIfNotExistThenCreate(interaction.user.id)
+        const userTo = await usersService.getUserIfNotExistThenCreate(userDiscordTo.id);
 
         const temp = userFrom.balance - tokens;
 
@@ -62,7 +62,7 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         const embed = new EmbedBuilder()
             .setTitle(`Id transaction ${transaction.id}`)
             .setDescription(
-                `${interaction.user.username} send ${transaction.coins} ${NAME_TOKEN} to ${userDiscordFrom.username}`
+                `${interaction.user.username} send ${transaction.coins} ${NAME_TOKEN} to ${userDiscordTo.username}`
             )
             .setAuthor({
                 name: interaction.user.username,

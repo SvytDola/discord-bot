@@ -5,6 +5,7 @@ import {BaseCommand} from "../base.mjs";
 
 import {Permission} from "../../enum/permission.mjs";
 import {EMBED_COLOR} from "../../config/index.mjs";
+import {ServiceManager} from "../../manager/service.mjs";
 
 
 export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
@@ -15,7 +16,7 @@ export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilde
             .setDescription("Return all permission roles."));
     }
 
-    async execute(interaction: ChatInputCommandInteraction) {
+    async execute(interaction: ChatInputCommandInteraction, _: ServiceManager) {
         const fields: APIEmbedField[] = [];
         const roles = Object.keys(Permission) as Permission[];
 

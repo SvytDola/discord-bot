@@ -8,7 +8,6 @@ import {
 import {BaseCommand} from "../base.mjs";
 import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 
-import {User} from "../../model/user.mjs";
 import {ServiceManager} from "../../manager/service.mjs";
 import {UsersService} from "../../service/user.mjs";
 import {TransactionsService} from "../../service/transaction.mjs";
@@ -28,12 +27,14 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
-    async execute(interaction: ChatInputCommandInteraction, user: User, serviceManager: ServiceManager) {
+    async execute(interaction: ChatInputCommandInteraction, serviceManager: ServiceManager) {
         const userDiscord = interaction.options.getUser("user");
         const discordUserIsNotNull = userDiscord != null;
 
         const usersService = serviceManager.getService(UsersService);
         const transactionsService  = serviceManager.getService(TransactionsService);
+
+        let user = await usersService.getUserIfNotExistThenCreate(interaction.user.id);
 
         if (discordUserIsNotNull) user = await usersService.getUserIfNotExistThenCreate(userDiscord.id);
 
