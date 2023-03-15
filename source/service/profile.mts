@@ -1,7 +1,6 @@
 import {Service} from "./service.mjs";
 import {Profile} from "../model/profile.mjs";
 import {ProfileNotFound} from "../error/profile.mjs";
-import {User} from "../model/user.mjs";
 
 export class ProfileService extends Service<Profile> {
     public async find(guildId: string, userId: string) {

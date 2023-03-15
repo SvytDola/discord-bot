@@ -6,9 +6,9 @@ import {
 } from "discord.js";
 
 import {BaseCommand} from "../base.mjs";
-import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 import {ServiceManager} from "../../manager/service.mjs";
 import {UsersService} from "../../service/user.mjs";
+import {cfg} from "../../config/index.mjs";
 
 
 export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
@@ -29,7 +29,7 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
 
         for (const user of users) {
             fields.push({
-                name: `${user.balance} ${NAME_TOKEN}`,
+                name: `${user.balance} ${cfg.tokenName}`,
                 value: `<@${user.id}>`
             });
         }
@@ -37,7 +37,7 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
         const embed = new EmbedBuilder()
             .setFields(fields)
             .setTimestamp()
-            .setColor(EMBED_COLOR)
+            .setColor(cfg.embedColor)
             .setTitle("Top of balance")
             .setDescription("First five users");
 

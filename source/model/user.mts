@@ -28,7 +28,8 @@ export class User extends Model {
     })
     declare balance: number;
 
+    @Column({type: DataType.BIGINT, defaultValue: 0})
+    declare faucetTimestamp: number;
     declare createdAt: Date;
     declare updatedAt: Date;
-
 }

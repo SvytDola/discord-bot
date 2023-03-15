@@ -1,13 +1,10 @@
-import {Column, DataType, Model} from "sequelize-typescript";
+import {Column, DataType, Model, Table} from "sequelize-typescript";
 
+@Table({tableName: "guilds"})
 export class Guild extends Model {
-    @Column({
-        type: DataType.STRING
-    })
+    @Column(DataType.STRING)
     declare id: string;
 
-    @Column({
-        type: DataType.STRING
-    })
+    @Column( DataType.STRING)
     declare welcome: string;
 }

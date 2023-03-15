@@ -17,15 +17,7 @@ import {
 
 import {onInteractionCreate, onReady} from "./event/index.mjs";
 import {registerCommandsInGuild} from "./register/commands.mjs";
-import {
-    CLIENT_ID,
-    DATABASE_DIALECT,
-    DATABASE_NAME,
-    DATABASE_PASSWORD,
-    DATABASE_PORT,
-    DATABASE_USERNAME,
-    DISCORD_TOKEN, GUILD_IDS
-} from "./config/index.mjs";
+import {cfg} from "./config/index.mjs";
 
 import {UsersService} from "./service/user.mjs";
 import {TransactionsService} from "./service/transaction.mjs";
@@ -39,12 +31,14 @@ import {Profile} from "./model/profile.mjs";
 
 async function getApp() {
     const sequelize = await getSequelize({
-        database: DATABASE_NAME,
-        username: DATABASE_USERNAME,
-        password: DATABASE_PASSWORD,
-        dialect: DATABASE_DIALECT,
-        port: DATABASE_PORT
+        database: cfg.database.name,
+        username: cfg.database.username,
+        password: cfg.database.password,
+        dialect: cfg.database.dialect,
+        port: cfg.database.port
     }, [User, Profile, Transaction]);
+
+    await sequelize.sync();
 
     const serviceManager = new ServiceManager();
 
@@ -72,7 +66,8 @@ async function getApp() {
             GatewayIntentBits.DirectMessages,
             GatewayIntentBits.MessageContent,
             GatewayIntentBits.GuildMessages
-        ]})
+        ]
+    })
         .addListener(Events.ClientReady, onReady)
         .addListener(Events.InteractionCreate, async (interaction: Interaction) => {
             await onInteractionCreate(interaction, serviceManager, commands);
@@ -80,10 +75,10 @@ async function getApp() {
 
     const jsonGuildCommands = commands.map(value => value.data.toJSON());
 
-    for (const guildId of GUILD_IDS) {
+    for (const guildId of cfg.guildIds) {
         await registerCommandsInGuild(
-            DISCORD_TOKEN,
-            CLIENT_ID,
+            cfg.token,
+            cfg.clientId,
             guildId,
             jsonGuildCommands
         );
@@ -95,7 +90,7 @@ async function getApp() {
 
 async function main() {
     const app = await getApp();
-    await app.login(DISCORD_TOKEN)
+    await app.login(cfg.token);
 }
 
 await main();

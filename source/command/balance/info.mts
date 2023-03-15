@@ -6,11 +6,11 @@ import {
 } from "discord.js";
 
 import {BaseCommand} from "../base.mjs";
-import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 
 import {ServiceManager} from "../../manager/service.mjs";
 import {UsersService} from "../../service/user.mjs";
 import {TransactionsService} from "../../service/transaction.mjs";
+import {cfg} from "../../config/index.mjs";
 
 export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBuilder> {
     constructor() {
@@ -38,21 +38,21 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
 
         if (discordUserIsNotNull) user = await usersService.getUserIfNotExistThenCreate(userDiscord.id);
 
-        const transactions = await transactionsService.getFromUser(user.id);
+        const transactions = await transactionsService.getFromUserId(user.id);
 
         const fields: APIEmbedField[] = [];
 
         for (const transaction of transactions) {
             fields.push({
                 name: transaction.createdAt.toLocaleString(),
-                value: `<@${transaction.from}> send ${transaction.coins} ${NAME_TOKEN} to <@${transaction.to}>`
+                value: `<@${transaction.from}> send ${transaction.coins} ${cfg.tokenName} to <@${transaction.to}> gas ${transaction.commission}`
             });
         }
         const url = discordUserIsNotNull ? userDiscord.avatarURL() : interaction.user.avatarURL();
         const embed = new EmbedBuilder()
             .setThumbnail(url)
-            .setTitle(`${user.balance.toString()} ${NAME_TOKEN}`)
-            .setColor(EMBED_COLOR)
+            .setTitle(`${user.balance.toString()} ${cfg.tokenName}`)
+            .setColor(cfg.embedColor)
             .setDescription(`Last ${transactions.length} transactions.`)
             .setTimestamp()
             .setFields(fields);

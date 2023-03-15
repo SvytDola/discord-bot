@@ -19,4 +19,7 @@ export class Transaction extends Model {
     declare coins: number;
     declare createdAt: Date;
     declare updatedAt: Date;
+
+    @Column(DataType.FLOAT)
+    declare commission: number;
 }

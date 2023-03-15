@@ -1,4 +1,4 @@
-import {Column, DataType, Model} from "sequelize-typescript";
+import {Column, DataType, Model, Table} from "sequelize-typescript";
 
 
 interface Role {
@@ -8,6 +8,7 @@ interface Role {
     categories: string[];
 }
 
+@Table({tableName: "profiles"})
 export class Profile extends Model {
 
     @Column({

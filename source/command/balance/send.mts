@@ -6,11 +6,10 @@ import {
 
 import {BaseCommand} from "../base.mjs";
 
-import {InadequateBalance} from "../../error/balance.mjs";
-import {EMBED_COLOR, NAME_TOKEN} from "../../config/index.mjs";
 import {ServiceManager} from "../../manager/service.mjs";
 import {UsersService} from "../../service/user.mjs";
 import {TransactionsService} from "../../service/transaction.mjs";
+import {cfg} from "../../config/index.mjs";
 
 export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
 
@@ -34,6 +33,8 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         );
     }
 
+
+
     async execute(interaction: ChatInputCommandInteraction, serviceManager: ServiceManager): Promise<void> {
         const userDiscordTo = interaction.options.getUser("user", true);
         const tokens = interaction.options.getNumber("tokens", true);
@@ -44,31 +45,20 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         const userFrom = await usersService.getUserIfNotExistThenCreate(interaction.user.id)
         const userTo = await usersService.getUserIfNotExistThenCreate(userDiscordTo.id);
 
-        const temp = userFrom.balance - tokens;
-
-        if (temp < 0)
-            throw new InadequateBalance();
-
-        userFrom.balance = temp;
-        userTo.balance += tokens;
-
-        await userFrom.save();
-        await userTo.save();
-
-        const transaction = await transactionsService.create(userFrom.id, userTo.id, tokens);
+        const transaction = await transactionsService.sendTokens(userFrom, userTo, tokens);
 
         const url = interaction.user.avatarURL();
 
         const embed = new EmbedBuilder()
             .setTitle(`Id transaction ${transaction.id}`)
             .setDescription(
-                `${interaction.user.username} send ${transaction.coins} ${NAME_TOKEN} to ${userDiscordTo.username}`
+                `${interaction.user.username} send ${transaction.coins} ${cfg.tokenName} to ${userDiscordTo.username} gas ${transaction.commission}`
             )
             .setAuthor({
                 name: interaction.user.username,
                 iconURL: url == null ? interaction.user.defaultAvatarURL : url
             })
-            .setColor(EMBED_COLOR);
+            .setColor(cfg.embedColor);
 
         await interaction.reply({embeds: [embed], ephemeral: true});
     }

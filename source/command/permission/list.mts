@@ -4,8 +4,8 @@ import {ChatInputCommandInteraction, EmbedBuilder, SlashCommandSubcommandBuilder
 import {BaseCommand} from "../base.mjs";
 
 import {Permission} from "../../enum/permission.mjs";
-import {EMBED_COLOR} from "../../config/index.mjs";
 import {ServiceManager} from "../../manager/service.mjs";
+import {cfg} from "../../config/index.mjs";
 
 
 export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilder> {
@@ -29,7 +29,7 @@ export class RoleListSubCommand extends BaseCommand<SlashCommandSubcommandBuilde
         }
 
         const embed = new EmbedBuilder()
-            .setColor(EMBED_COLOR)
+            .setColor(cfg.embedColor)
             .setTitle("Permission roles")
             .setDescription("Roles responsible for moderating the bot.")
             .setFields(fields)
