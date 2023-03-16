@@ -22,6 +22,15 @@
   }
 }
 ```
+## Install requirements
+```shell
+npm install .
+```
+## Run bot
+```shell
+npm start
+```
+
 # Tasks
 
 - [x] balance `command`
@@ -33,3 +42,6 @@
   - [ ] play
   - [ ] skip
   - [ ] pause
+
+# Commands
+![alt](https://media.discordapp.net/attachments/817438337181941842/1085935308027203737/anix3.gif)
