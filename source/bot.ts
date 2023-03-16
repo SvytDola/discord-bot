@@ -73,8 +73,8 @@ async function getApp() {
             await onInteractionCreate(interaction, serviceManager, commands);
         });
 
-    const jsonGuildCommands = dataCommands.filter(value => value.isGlobalCommand).map(value => value.data.toJSON());
-    const globalCommands = dataCommands.filter(value => !value.isGlobalCommand).map(value => value.data.toJSON());
+    const jsonGuildCommands = dataCommands.filter(value => !value.isGlobalCommand).map(value => value.data.toJSON());
+    const globalCommands = dataCommands.filter(value => value.isGlobalCommand).map(value => value.data.toJSON());
 
     for (const guildId of cfg.guildIds) {
         await registerCommandsInGuild(
