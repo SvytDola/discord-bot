@@ -1,5 +1,7 @@
 # discord-bot
 
+I am writing this bot to learn how to program in typescript.
+
 # Configuration
 
 #### Create file `config.json`

@@ -30,7 +30,7 @@ import {ProfileService} from "./service/profile.mjs";
 import {Profile} from "./model/profile.mjs";
 
 async function getApp() {
-    const sequelize = await getSequelize({
+    const sequelize = getSequelize({
         database: cfg.database.name,
         username: cfg.database.username,
         password: cfg.database.password,
