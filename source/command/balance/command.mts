@@ -14,7 +14,8 @@ export class BalanceCommand extends BaseCommandSubCommands {
                 new BalanceInfoSubcommand(),
                 new BalanceSendSubCommand(),
                 new BalanceTopSubCommand()
-            ]
+            ],
+            true
         )
     }
 }

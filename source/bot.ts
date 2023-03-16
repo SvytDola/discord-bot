@@ -16,7 +16,7 @@ import {
 } from "./command/index.mjs";
 
 import {onInteractionCreate, onReady} from "./event/index.mjs";
-import {registerCommandsInGuild} from "./register/commands.mjs";
+import {registerCommandsInGlobal, registerCommandsInGuild} from "./register/commands.mjs";
 import {cfg} from "./config/index.mjs";
 
 import {UsersService} from "./service/user.mjs";
@@ -73,7 +73,8 @@ async function getApp() {
             await onInteractionCreate(interaction, serviceManager, commands);
         });
 
-    const jsonGuildCommands = commands.map(value => value.data.toJSON());
+    const jsonGuildCommands = dataCommands.filter(value => value.isGlobalCommand).map(value => value.data.toJSON());
+    const globalCommands = dataCommands.filter(value => !value.isGlobalCommand).map(value => value.data.toJSON());
 
     for (const guildId of cfg.guildIds) {
         await registerCommandsInGuild(
@@ -83,7 +84,7 @@ async function getApp() {
             jsonGuildCommands
         );
     }
-
+    await registerCommandsInGlobal(cfg.token, cfg.clientId, globalCommands);
     console.log(`Successfully reloaded  application (/) commands.`);
     return client;
 }

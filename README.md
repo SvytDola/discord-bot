@@ -1,6 +1,8 @@
 # discord-bot
 
-# config.json
+# Configuration
+
+#### Create file `config.json`
 ```json
 {
   "guildIds": ["guildId"],
@@ -14,9 +16,20 @@
     "name": "discord",
     "host": "localhost",
     "dialect": "mysql",
-    "username": "root",
-    "password": "h8hzz9z8",
+    "username": "username",
+    "password": "password",
     "port": 3306
   }
 }
 ```
+# Tasks
+
+- [x] balance `command`
+  - [x] info `info of balance`
+  - [x] send `send tokens`
+  - [x] top `show user top of balance`
+- [x] faucet `send free tokens`
+- [ ] music
+  - [ ] play
+  - [ ] skip
+  - [ ] pause

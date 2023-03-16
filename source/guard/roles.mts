@@ -20,12 +20,7 @@ export const Roles = (...roles: string[]) => {
                 interaction.user.id
             );
 
-
-            const channelId = interaction.channelId;
-            const categoryId = interaction.channel;
-
-            const role = profile.roles[0];
-
+            // TODO: make check roles
             return await method.apply(this, [interaction, serviceManager]);
         }
     }

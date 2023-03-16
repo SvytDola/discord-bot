@@ -14,7 +14,8 @@ export class FaucetCommand extends BaseCommand<SlashCommandBuilder> {
         super(
             new SlashCommandBuilder()
                 .setName("faucet")
-                .setDescription("Get test tokens.")
+                .setDescription("Get test tokens."),
+            true
         );
     }
 
@@ -27,7 +28,6 @@ export class FaucetCommand extends BaseCommand<SlashCommandBuilder> {
 
         if (Date.now() - userTo.faucetTimestamp <= 1000 * 60 * 60)
             throw new FaucetError();
-
 
         const temp = userFrom.balance - cfg.faucetTokensNumber;
 

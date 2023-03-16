@@ -7,7 +7,7 @@ import {
 import {ServiceManager} from "../manager/service.mjs";
 
 export abstract class BaseCommand<T> {
-    protected constructor(public data: T) {
+    protected constructor(public data: T, public isGlobalCommand: boolean = false) {
     }
 
     public abstract execute(
@@ -19,8 +19,12 @@ export abstract class BaseCommand<T> {
 export class BaseCommandSubCommands extends BaseCommand<SlashCommandSubcommandsOnlyBuilder> {
     public commands: Collection<string, BaseCommand<SlashCommandSubcommandBuilder>>;
 
-    constructor(public data: SlashCommandSubcommandsOnlyBuilder, commands: BaseCommand<SlashCommandSubcommandBuilder>[]) {
-        super(data);
+    constructor(
+        public data: SlashCommandSubcommandsOnlyBuilder,
+        commands: BaseCommand<SlashCommandSubcommandBuilder>[],
+        isGlobalCommand: boolean = false
+    ) {
+        super(data, isGlobalCommand);
         this.commands = new Collection<string, BaseCommand<SlashCommandSubcommandBuilder>>();
         for (const command of commands) {
             this.data.addSubcommand(command.data);
