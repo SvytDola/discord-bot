@@ -12,7 +12,8 @@ import {
     BaseCommand,
     FaucetCommand,
     PingCommand,
-    PermissionCommand
+    PermissionCommand,
+    MusicCommand
 } from "./command/index.mjs";
 
 import {onInteractionCreate, onReady} from "./event/index.mjs";
@@ -23,12 +24,11 @@ import {UsersService} from "./service/user.mjs";
 import {TransactionsService} from "./service/transaction.mjs";
 
 import {User} from "./model/user.mjs";
+import {Profile} from "./model/profile.mjs";
 import {Transaction} from "./model/transaction.mjs";
 
 import {ServiceManager} from "./manager/service.mjs";
 import {ProfileService} from "./service/profile.mjs";
-import {Profile} from "./model/profile.mjs";
-import { MusicCommand } from "./command/music/command.mjs";
 
 async function getApp() {
     const sequelize = getSequelize({
