@@ -28,6 +28,7 @@ import {Transaction} from "./model/transaction.mjs";
 import {ServiceManager} from "./manager/service.mjs";
 import {ProfileService} from "./service/profile.mjs";
 import {Profile} from "./model/profile.mjs";
+import { MusicCommand } from "./command/music/command.mjs";
 
 async function getApp() {
     const sequelize = getSequelize({
@@ -52,7 +53,8 @@ async function getApp() {
         new PingCommand(),
         new PermissionCommand(),
         new BalanceCommand(),
-        new FaucetCommand()
+        new FaucetCommand(),
+        new MusicCommand()
     ];
 
     for (const command of dataCommands) {
@@ -73,8 +75,13 @@ async function getApp() {
             await onInteractionCreate(interaction, serviceManager, commands);
         });
 
-    const jsonGuildCommands = dataCommands.filter(value => !value.isGlobalCommand).map(value => value.data.toJSON());
-    const globalCommands = dataCommands.filter(value => value.isGlobalCommand).map(value => value.data.toJSON());
+    const jsonGuildCommands = dataCommands
+        .filter(value => !value.isGlobalCommand)
+        .map(value => value.data.toJSON());
+
+    const globalCommands = dataCommands
+        .filter(value => value.isGlobalCommand)
+        .map(value => value.data.toJSON());
 
     for (const guildId of cfg.guildIds) {
         await registerCommandsInGuild(
