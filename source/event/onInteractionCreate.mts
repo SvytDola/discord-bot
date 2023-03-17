@@ -1,7 +1,8 @@
-import {Collection, Interaction} from "discord.js";
+import {Collection, EmbedBuilder, Interaction} from "discord.js";
 import {ServiceManager} from "../manager/service.mjs";
 import {BaseError} from "../error/base.mjs";
 import {BaseCommand} from "../command/index.mjs";
+import { cfg } from "../config/index.mjs";
 
 export async function onInteractionCreate(
     interaction: Interaction,
@@ -20,10 +21,16 @@ export async function onInteractionCreate(
     try {
         await command.execute(interaction, serviceManager);
     } catch (error) {
-        if (error instanceof BaseError) {
-            await interaction.reply({content: error.message});
-            return;
-        }
         console.error(error);
+
+        if (error instanceof BaseError) {
+            const embed = new EmbedBuilder()
+                .setTitle("❌ Error")
+                .setColor(cfg.embedColor)
+                .setDescription(error.message);
+
+
+            await interaction.reply({embeds: [embed]});
+        }
     }
 }

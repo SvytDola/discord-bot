@@ -33,6 +33,11 @@ export class TransactionsService extends Service<Transaction> {
         });
     }
 
+    /**
+     * It is better to use this function to send tokens, 
+     * it takes into account the commit by sending it to the client (bot), 
+     * and causes an error if the balance is zero.
+     */
     public async sendTokens(userFrom: User, userTo: User, tokens: number) {
         const commission = tokens * (cfg.commissionPercent / 100);
         const temp = userFrom.balance - tokens - commission;
