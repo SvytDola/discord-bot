@@ -14,8 +14,8 @@ export const Permissions = (...permissions: Permission[]) => {
         const method = descriptor.value!
         descriptor.value = async function (interaction, serviceManager) {
             const usersService = serviceManager.getService(UsersService);
-            const user = await usersService.getUserIfNotExistThenCreate(interaction.user.id);
-            if (!permissions.some(permission => user.permissions.includes(permission)))
+            const userPermissions = await usersService.getPermissionsFromUserId(interaction.user.id);
+            if (!permissions.some(permission => userPermissions.includes(permission)))
                 throw new AccessDenied();
 
             return await method.apply(this, [interaction, serviceManager]);

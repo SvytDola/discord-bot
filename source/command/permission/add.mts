@@ -46,7 +46,7 @@ export class RoleAddSubCommand extends BaseCommand<SlashCommandSubcommandBuilder
         if (!validatePermission(permission)) throw new PermissionNotFound(permission);
 
         const userId = interaction.options.getUser(NAME_USER_OPTION, true).id;
-        const user = await usersService.getUserIfNotExistThenCreate(userId);
+        const user = await usersService.getOrCreate(userId);
 
         if (user.permissions.includes(permission))
             throw new PermissionAlreadyExists(permission);

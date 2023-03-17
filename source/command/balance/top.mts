@@ -23,7 +23,7 @@ export class BalanceTopSubCommand extends BaseCommand<SlashCommandSubcommandBuil
 
     async execute(interaction: ChatInputCommandInteraction, serviceManager: ServiceManager): Promise<void> {
         const usersService = serviceManager.getService(UsersService);
-        const users = await usersService.getUsersTopBalance();
+        const users = await usersService.getListTopOfBalance();
 
         const fields: APIEmbedField[] = [];
 

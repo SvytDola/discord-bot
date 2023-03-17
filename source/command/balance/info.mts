@@ -34,11 +34,11 @@ export class BalanceInfoSubcommand extends BaseCommand<SlashCommandSubcommandBui
         const usersService = serviceManager.getService(UsersService);
         const transactionsService  = serviceManager.getService(TransactionsService);
 
-        let user = await usersService.getUserIfNotExistThenCreate(interaction.user.id);
+        let user = await usersService.getOrCreate(interaction.user.id);
 
-        if (discordUserIsNotNull) user = await usersService.getUserIfNotExistThenCreate(userDiscord.id);
+        if (discordUserIsNotNull) user = await usersService.getOrCreate(userDiscord.id);
 
-        const transactions = await transactionsService.getFromUserId(user.id);
+        const transactions = await transactionsService.getListFromUserId(user.id);
 
         const fields: APIEmbedField[] = [];
 

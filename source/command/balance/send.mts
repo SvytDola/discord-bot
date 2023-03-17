@@ -42,8 +42,8 @@ export class BalanceSendSubCommand extends BaseCommand<SlashCommandSubcommandBui
         const usersService = serviceManager.getService(UsersService);
         const transactionsService = serviceManager.getService(TransactionsService);
 
-        const userFrom = await usersService.getUserIfNotExistThenCreate(interaction.user.id)
-        const userTo = await usersService.getUserIfNotExistThenCreate(userDiscordTo.id);
+        const userFrom = await usersService.getOrCreate(interaction.user.id)
+        const userTo = await usersService.getOrCreate(userDiscordTo.id);
 
         const transaction = await transactionsService.sendTokens(userFrom, userTo, tokens);
 

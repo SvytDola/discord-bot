@@ -23,8 +23,8 @@ export class FaucetCommand extends BaseCommand<SlashCommandBuilder> {
         const transactionsService = serviceManager.getService(TransactionsService);
         const usersService = serviceManager.getService(UsersService);
 
-        const userFrom = await usersService.getUserIfNotExistThenCreate(interaction.client.user.id);
-        const userTo = await usersService.getUserIfNotExistThenCreate(interaction.user.id);
+        const userFrom = await usersService.getOrCreate(interaction.client.user.id);
+        const userTo = await usersService.getOrCreate(interaction.user.id);
 
         if (Date.now() - userTo.faucetTimestamp <= 1000 * 60 * 60)
             throw new FaucetError();

@@ -41,7 +41,7 @@ export class RoleRemoveSubCommand extends BaseCommand<SlashCommandSubcommandBuil
         if (!validatePermission(permissionRole)) throw new PermissionNotFound(permissionRole);
 
         const userId = interaction.options.getUser(NAME_PERMISSION_ROLE_OPTION, true).id;
-        let user = await usersService.getUserIfNotExistThenCreate(userId);
+        let user = await usersService.getOrCreate(userId);
 
         if (!user.permissions.includes(permissionRole))
             throw new UserDoesNotHaveThisPermission(permissionRole);

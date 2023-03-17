@@ -1,18 +1,19 @@
 import {Op} from "sequelize";
-
-import {Service} from "./service.mjs";
-import {Transaction} from "../model/transaction.mjs";
-import {InadequateBalance} from "../error/balance.mjs";
-import {User} from "../model/user.mjs";
-import {cfg} from "../config/index.mjs";
 import {Repository} from "sequelize-typescript";
 
+import {Service} from "./service.mjs";
+
+import {cfg} from "../config/index.mjs";
+import {User} from "../model/user.mjs";
+import {Transaction} from "../model/transaction.mjs";
+import {InadequateBalance} from "../error/balance.mjs";
 
 export class TransactionsService extends Service<Transaction> {
 
     constructor(repository: Repository<Transaction>, private clientUser: User) {
         super(repository);
     }
+
     public async create(from: string, to: string, coins: number, commission: number) {
         return await this.repository.create({
             from,
@@ -22,7 +23,7 @@ export class TransactionsService extends Service<Transaction> {
         });
     }
 
-    public async getFromUserId(userId: string, limit: number = 5) {
+    public async getListFromUserId(userId: string, limit: number = 5) {
         return await this.repository.findAll({
             where: {
                 [Op.or]: [{from: userId}, {to: userId}]
@@ -33,7 +34,7 @@ export class TransactionsService extends Service<Transaction> {
     }
 
     public async sendTokens(userFrom: User, userTo: User, tokens: number) {
-        const commission = tokens * (cfg.commissionPercent / 100)
+        const commission = tokens * (cfg.commissionPercent / 100);
         const temp = userFrom.balance - tokens - commission;
 
         if (temp < 0)

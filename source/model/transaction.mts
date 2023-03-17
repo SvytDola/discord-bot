@@ -17,7 +17,9 @@ export class Transaction extends Model {
 
     @Column(DataType.DOUBLE)
     declare coins: number;
+
     declare createdAt: Date;
+    
     declare updatedAt: Date;
 
     @Column(DataType.FLOAT)
