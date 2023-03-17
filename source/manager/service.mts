@@ -1,15 +1,25 @@
 export class ServiceManager {
-    private readonly services: Map<string, any>;
+    
+    /**
+     * key -> value 
+     */
+    private readonly cache: Map<string, any>;
 
     constructor() {
-        this.services = new Map();
+        this.cache = new Map();
     }
 
     public getService<T extends object>(model: { new(...args: any[]): T }): T {
-        return this.services.get(model.name);
+        const value = this.cache.get(model.name);
+
+        if (value === undefined) {
+            throw Error("Service not found.")
+        }
+
+        return value;
     }
 
     public setService<T extends object>(model: T) {
-        this.services.set(model.constructor.name, model);
+        this.cache.set(model.constructor.name, model);
     }
 }

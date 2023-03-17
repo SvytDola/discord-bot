@@ -5,9 +5,14 @@ import {Transaction} from "../model/transaction.mjs";
 import {InadequateBalance} from "../error/balance.mjs";
 import {User} from "../model/user.mjs";
 import {cfg} from "../config/index.mjs";
+import {Repository} from "sequelize-typescript";
 
 
 export class TransactionsService extends Service<Transaction> {
+
+    constructor(repository: Repository<Transaction>, private clientUser: User) {
+        super(repository);
+    }
     public async create(from: string, to: string, coins: number, commission: number) {
         return await this.repository.create({
             from,
