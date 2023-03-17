@@ -39,9 +39,12 @@ export class TransactionsService extends Service<Transaction> {
         if (temp < 0)
             throw new InadequateBalance();
 
+        this.clientUser.balance += commission;
+
         userFrom.balance = temp;
         userTo.balance += tokens;
 
+        await this.clientUser.save();
         await userFrom.save();
         await userTo.save();
 

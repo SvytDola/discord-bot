@@ -43,8 +43,11 @@ async function getApp() {
 
     const serviceManager = new ServiceManager();
 
-    serviceManager.setService(new UsersService(sequelize.getRepository(User)));
-    serviceManager.setService(new TransactionsService(sequelize.getRepository(Transaction)));
+    const userService = new UsersService(sequelize.getRepository(User));
+    const userClient = await userService.find(cfg.clientId);
+
+    serviceManager.setService(userService);
+    serviceManager.setService(new TransactionsService(sequelize.getRepository(Transaction), userClient));
     serviceManager.setService(new ProfileService(sequelize.getRepository(Profile)))
 
     const commands = new Collection<string, BaseCommand<any>>();
